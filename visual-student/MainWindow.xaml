@@ -17,6 +17,12 @@
             <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Path}" />
         </DataTemplate>
 
+        <ControlTemplate x:Key="OpenedFileBodyTemplate">
+            <RichTextBox>
+                
+            </RichTextBox>
+        </ControlTemplate>
+
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -45,7 +51,20 @@
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <TabControl Grid.Column="0" x:Name="openFiles"/>
+            <TabControl Grid.Column="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles}">
+                <TabControl.ItemTemplate>
+                    <!-- this is the header template-->
+                    <DataTemplate>
+                        <TextBlock Text="{Binding name}" />
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <!-- this is the body of the TabItem template-->
+                    <DataTemplate>
+                        <TextBlock Text="{Binding body}" />
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
             <TreeView Grid.Column="2" x:Name="fileTree" ItemsSource="{Binding}" MouseDoubleClick="fileTree_MouseDoubleClick"/>
         </Grid>

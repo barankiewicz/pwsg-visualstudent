@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,11 +22,25 @@ namespace visual_student
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        //Implementation of INotifyPropertyChanged interface
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void RaisePropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private ObservableCollection<OpenedFile> _openedFiles;
+
+        ObservableCollection<OpenedFile> OpenedFiles { get { return _openedFiles; } set { _openedFiles = value; RaisePropertyChanged("OpenedFiles"); } }
+
         public MainWindow()
         {
             InitializeComponent();
+            _openedFiles = new ObservableCollection<OpenedFile>();
+            openFiles.ItemsSource = OpenedFiles;
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -45,43 +61,16 @@ namespace visual_student
             opf.Filter = "C# Files (*cs) |*.cs";
             if(opf.ShowDialog() == true)
             {
-                //Open new tab
-                TabItem newTabItem = new TabItem();
-                newTabItem.Header = opf.SafeFileName;
-                StreamReader sr = new StreamReader(new FileStream(opf.FileName, FileMode.Open));
-                StringBuilder sb = new StringBuilder();
-
-                while(!sr.EndOfStream)
-                {
-                    sb.Append(sr.ReadLine());
-                    sb.Append("\n");
-                }
-
-                RichTextBox textbox = new RichTextBox();
-                textbox.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
-                Paragraph p = textbox.Document.Blocks.FirstBlock as Paragraph;
-                textbox.Document.Blocks.Add(new Paragraph(new Run(sb.ToString())));
-                newTabItem.Content = textbox;
-                openFiles.Items.Add(newTabItem);
-                openFiles.SelectedIndex = openFiles.Items.Count - 1;
-                openFiles.Items.Refresh();
+                OpenedFile file = OpenedFile.LoadFromFileStream(opf.FileName, opf.SafeFileName);
+                OpenedFiles.Add(file);
             }
         }
 
         private void MenuItem_Click_3(object sender, RoutedEventArgs e)
         {
             //New file button
-            TabItem newTabItem = new TabItem();
-            newTabItem.Header = "New file";
-            TextBox textbox = new TextBox();
-            textbox.Text = "";
-            newTabItem.Content = textbox;
-            textbox.TextWrapping = TextWrapping.Wrap;
-            textbox.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
-
-            openFiles.Items.Add(newTabItem);
-            openFiles.SelectedIndex = openFiles.Items.Count - 1;
-            openFiles.Items.Refresh();
+            OpenedFile file = new OpenedFile();
+            OpenedFiles.Add(file);
         }
 
         private void MenuItem_Click_4(object sender, RoutedEventArgs e)
@@ -117,25 +106,8 @@ namespace visual_student
                         return;
                 }
                 //Open new tab
-                TabItem newTabItem = new TabItem();
-                StreamReader sr = new StreamReader(new FileStream(file.Path, FileMode.Open));
-                StringBuilder sb = new StringBuilder();
-
-                while (!sr.EndOfStream)
-                {
-                    sb.Append(sr.ReadLine());
-                    sb.Append("\n");
-                }
-
-                RichTextBox textbox = new RichTextBox();
-                textbox.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
-                Paragraph p = textbox.Document.Blocks.FirstBlock as Paragraph;
-                textbox.Document.Blocks.Add(new Paragraph(new Run(sb.ToString())));
-                newTabItem.Header = file.Name;
-                newTabItem.Content = textbox;
-                openFiles.Items.Add(newTabItem);
-                openFiles.SelectedIndex = openFiles.Items.Count - 1;
-                openFiles.Items.Refresh();
+                OpenedFile openedfile = OpenedFile.LoadFromFileStream(file.Path, file.Name);
+                OpenedFiles.Add(openedfile);
             }
         }
     }

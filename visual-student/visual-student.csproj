@@ -63,10 +63,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DirectoryItem.cs" />
-    <Compile Include="FileItem.cs" />
-    <Compile Include="Item.cs" />
-    <Compile Include="ItemProvider.cs" />
+    <Compile Include="OpenedFile.cs" />
+    <Compile Include="TreeItem Classes\DirectoryItem.cs" />
+    <Compile Include="TreeItem Classes\FileItem.cs" />
+    <Compile Include="TreeItem Classes\Item.cs" />
+    <Compile Include="TreeItem Classes\ItemProvider.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
