@@ -1,0 +1,16 @@
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\bin\Debug\visual-student.exe.config
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\bin\Debug\visual-student.exe
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\bin\Debug\visual-student.pdb
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\obj\Debug\visual-student.csprojResolveAssemblyReference.cache
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\obj\Debug\MainWindow.g.cs
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\obj\Debug\App.g.cs
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\obj\Debug\visual-student_MarkupCompile.cache
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\obj\Debug\visual-student_MarkupCompile.lref
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\obj\Debug\MainWindow.baml
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\obj\Debug\visual-student.g.resources
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\obj\Debug\visual_student.Properties.Resources.resources
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\obj\Debug\visual-student.csproj.GenerateResource.Cache
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\obj\Debug\visual-student.csproj.CoreCompileInputs.cache
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\obj\Debug\visual-student.exe
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\obj\Debug\visual-student.pdb
+h:\Windows7\Desktop\PWSG\visual-student\visual-student\obj\Debug\GeneratedInternalTypeHelper.g.cs

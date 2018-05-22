@@ -1,0 +1,182 @@
+﻿<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+<h2>WPF2 - Visual Student</h2>
+	<p>Zadanie polega na napisaniu prostego edytora plików C#, który umożliwia zbudowanie całego projektu oraz jego uruchomienie.</p>
+
+	<h3>Część laboratoryjna</h3>
+	<ul>
+		<li><a href="lab.exe">Aplikacja przykładowa</a></li>
+		<li>Główne okno:
+            <ul>
+            	<li>rozmiar początkowy: 800px x 600px, rozmiar minimalny 500px x 500px</li>
+	            <li>okno pojawia się na środku ekranu</li>
+                <li>główne okno zawiera:
+                    <ul>
+                        <li>menu na górze</li>
+						<li>edytor tekstu - kontrolka składająca się z wielu zakładek, umożliwiająca jednoczesną edycję wielu plików C# (rozszerzenie .cs)</li>
+						<li>drzewo projektu - drzewo przedstawiająca całą strukturę katalogową otwartego projektu, umożliwiające otwarcie pliku do edycji poprzez podwójne kliknięcie</li>
+                    </ul>
+                </li>
+				<li>pomiędzy edytorem tekstu, a drzewem projektu znajduje się splitter, który umożliwia zmianę szerokości każdej z tych części aplikacji</li>
+            </ul>
+		</li>
+        <li>Menu:
+        	<ul>
+            	<li>File
+                	<ul>
+                    	<li>New - tworzy nową zakładkę z pustym edytorem tekstowym</li>
+                        <li>Open file - umożliwia otwarcie pliku z rozszerzeniem .cs (ustawiony odpowiedni filtr) oraz późniejszą jego edycję w edytorze</li>
+                        <li>Open project - umożliwia otwarcie projektu C# oraz wczytanie jego struktury do drzewa znajdującego się po prawej stronie aplikacji (warunkiem określającym czy dany folder zawiera poprawny projekt C# jest istnienie pliku z rozszerzeniem .csproj w katalogu)</li>
+                        <li>Exit - zamyka aplikację</li>
+                    </ul>
+                </li>
+                <li>About - wyświetla krótką informację o aplikacji</li>
+            </ul>
+        </li>
+        <li>Edytor tekstu:
+        	<ul>
+	            <li>podzielony na zakładki (jedna zakładka = jeden otwarty plik)</li>
+                <li>tytuł każdej zakładki to nazwa pliku, a w przypadku utworzenia nowego pliku tytuł zakładki to 'New file'</li>
+            	<li>każda zakładka zawiera prosty edytor umożliwiający edycje pliku</li>
+            </ul>
+        </li>
+        <li>Drzewo projektu
+        	<ul>
+            	<li>przedstawia strukturę katalogową otwartego projektu</li>
+				<li>wyświetla pliki z rozszerzeniem .cs</li>
+				<li>podwójne kliknięcie na element reprezentujący plik .cs powoduje otwarcie tego pliku do edycji</li>
+                <li>w przypadku próby wczytania nieprawidłowego projektu (katalog, który nie zawiera pliku .csproj) wyświetlony zostanie komunikat informujący o błędzie</li>
+            </ul>
+        </li>
+		<li>Wskazówki:
+		<ul>
+			<li>WindowStartupLocation, Window.MinHeight, Window.Height, Window.MinWidth, Window.Width</li>
+			<li>Menu, MenuItem</li>
+            <li>RichTextBox</li>
+            <li>ListBox, ListView.ItemTemplate, DataTemplate</li>
+			<li>TreeView</li>
+			<li>FolderBrowserDialog (System.Windows.Forms)</li>
+		</ul>
+		</li>
+		<li>Punktacja:
+		<ul>
+			<li>menu + layout okna + 'New' + 'Open file' + edytor tekstu z zakładkami zawierającymi otwarte lub nowo utworzone pliki - 4 punkty</li>
+            <li>menu + layout okna + 'Open project' + drzewo projektu - 4 punkty</li>
+		</ul>
+		</li>
+	</ul>
+	
+	<h3>Część domowa</h3>
+	<ul>
+	<li><a href="home.exe">Aplikacja przykładowa</a></li>
+	<li>Spełnienie wymagań z części pierwszej jest warunkiem koniecznym do oceny części drugiej.</i></li>
+	<li>Główne okno:
+    	<ul>
+        	<li>główne okno podzielone na 4 główne sekcje</li>
+            <li>sekcja budowania projektu, znajdująca się pod menu, zawiera combo box umożliwiającego wybór pomiędzy samym zbudowaniem projektu, a zbudowaniem oraz uruchomieniem wygenerowanego pliku exe</li>
+            <li>sekcja po prawej stronie zawiera drzewo projektu</li>
+            <li>górna sekcja po lewej stronie zawiera zakładki z otwartymi plikami C#</li>
+			<li>dolna sekcja po lewej stronie zawiera output z procesu kompilacji projektu oraz listę znalezionych błędów</li>
+        </ul>
+    </li>
+    <li>Menu:
+    	<ul>
+        	<li>dodany element menu 'Save' oraz 'Save as', które umożliwiają zapisanie edytowanego pliku</li>
+            <li>nowy element menu 'Plugins' zawierający listę wczytanych pluginów z plików dll</li>
+            <li>każdy plugin może zostać włączony lub wyłączony poprzez kliknięcie na element menu w zakładce 'Plugins'</li>
+			<li>jednocześnie może być włączonych kilka pluginów</li>
+        </ul>
+    </li>
+	<li>Skróty klawiszowe:
+		<ul>
+			<li>'Ctrl + N' - tworzy nowy plik</li>
+			<li>'Ctrl + O' - otwiera plik</li>
+			<li>'Ctrl + S' - zapisuje plik</li>
+			<li>'F5' - uruchamia kompilację (plus ewentualnie uruchamia wygenerowany plik exe)</li>
+		</ul>
+	</li>
+	<li>Sekcja budowania projektu:
+		<ul>
+			<li>combo box, który umożliwia wybór czy chcemy tylko zbudować projekt czy dodatkowo uruchomić wygenerowany plik exe</li>
+			<li>przycisk 'Execute' umożliwiający uruchomienie procesu kompilacji
+		</ul>
+	</li>
+    <li>Edytor tekstowy:
+    	<ul>
+        	<li>użytkownik ma możliwość zamknięcia zakładki poprzez kliknięcie przycisku 'X'</li>
+			<li>jeśli dokument został edytowany, to w tytule zakładki dodany zostaje znak '*'</li>
+            <li>jeśli dokument został edytowany i użytkownik chce go zamknąć, wyświetlany jest odpowiedni komunikat (patrz aplikacja przykładowa)</li>
+        </ul>
+    </li>
+    <li>Output oraz lista błędów:
+    	<ul>
+        	<li>sekcja zawiera dwie zakładki</li>
+			<li>w zakładce 'Output' wyświetlony zostaje cały output, który generuje BuildManager w procesie kompilacji projektu</li>
+			<li>w zakładce 'Error List' wyświetlone są ewentualne błędy, które wystąpiły podczas kompilacji - należy stworzyć odpowiedni DataTemplate</li>
+            <li>po najechaniu na nazwę każdej z zakładki aktywuje się animacja (patrz aplikacja przykładowa)</li>
+        </ul>
+    </li>
+    <li>System pluginów:
+    	<ul>
+        	<li>należy zaimplementować dwa pluginy: pierwszy kolorujący na niebiesko słowa kluczowe (public, private, get, set), drugi kolorujący na czerwono i pogrubiający słowa kluczowe (using, if, else, for, foreach)</li>
+            <li>system pluginów powinien umożliwiać dodanie nowego pluginu bez konieczności ponownej kompilacji projektu - poprzez dodanie odpowiedniego pliku dll do katalogu z plikiem exe</li>
+            <li>każdy plugin powinien być zaimplementowany jako class library (generowany do pliku dll), który implementuje poniższy interfejs:
+            	<pre>
+public interface IPlugin
+{
+    string Name { get; }
+    void Do(RichTextBox richTextBox);
+}
+                </pre>
+            </li>
+            <li>system pluginów powinien być zaimplementowany w sposób, który umożliwia wymianę pluginów pomiędzy studentami</li>
+            <li>poniżej przedstawiono przykład implementacji pluginu
+            	<pre>
+public class SyntaxHighlightPlugin : IPlugin
+{
+    public string Name
+    {
+        get
+        {
+            return "Sample Plugin";
+        }
+    }
+
+    public void Do(RichTextBox richTextBox)
+    {
+        // DO SOMETHING
+    }
+}
+                </pre>
+            </li>
+        </ul>
+    </li>
+	<li>Wskazówki:
+		<ul>
+			<li>NotifyPropertyChanged</li>
+			<li>ComboBox, ComboBoxItem</li>
+			<li>TabControl, TabItem</li>
+			<li>EventTrigger, DoubleAnimation</li>
+			<li>InputBindings, KeyBinding, Command</li>
+			<li>BuildManager, BuildParameters, ConsoleLogger</li>
+			<li>Build Path in Project properties</li>
+		</ul>
+	</li>
+	<li>Punktacja:
+    	<ul>
+			<li>proces kompilacji projektu i uruchamiania wygenerowanego pliku exe - 2 punkty</li>
+			<li>wyświetlanie outputu z kompilacji oraz listy błędów - 2 punkty</li>
+			<li>zamykanie zakładek z plikami C# - 1 punkt</li>
+			<li>sygnalizacja zmian w pliku (znak '*') oraz zapisywanie plików - 1 punkt</li>
+			<li>animacja zakładek 'Output' oraz 'Error List' - 1 punkt</li>
+			<li>skróty klawiszowe - 1 punkt</li>
+            <li>system pluginów - 4 punkty (bez zaimplementowanego systemu, każdy plugin jest wart 0.5pkt)</li>
+        </ul>
+    </li>
+</ul>
+</body>
+</html>
