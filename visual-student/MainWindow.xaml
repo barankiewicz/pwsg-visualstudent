@@ -24,7 +24,7 @@
         </ControlTemplate>
 
     </Window.Resources>
-    <Grid>
+    <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="35"/>
@@ -35,26 +35,30 @@
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
                     <MenuItem Header="New" Click="MenuItem_Click_3" />
+                    <MenuItem Header="Save" x:Name="saveButton"/>
+                    <MenuItem Header="Save As..." x:Name="saveAsButton"/>
                     <MenuItem Header="Open File" Click="MenuItem_Click_2" />
                     <MenuItem Header="Open Project" Click="MenuItem_Click_4" />
                     <Separator />
                     <MenuItem Header="Exit" Click="MenuItem_Click_1" />
                 </MenuItem>
+                <MenuItem Header="Plugins">
+
+                </MenuItem>
                 <MenuItem Header="About" Click="MenuItem_Click"/>
             </Menu>
-            <TextBox AcceptsReturn="True" Name="txtEditor" />
         </DockPanel>
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
-            <ComboBox Grid.Column="0" Margin="5 5" SelectedIndex="0">
+            <ComboBox Grid.Column="0" Margin ="0 0 " SelectedIndex="0" VerticalAlignment="Center">
                 <ComboBoxItem Content="Build"/>
                 <ComboBoxItem Content="Build + Run"/>
             </ComboBox>
-            <Button Grid.Column="1" Margin="5 5" Content="Execute"/>
+            <Button Grid.Column="1" Margin="6 6" Content="Execute"/>
         </Grid>
 
         <Grid Grid.Row="2">
