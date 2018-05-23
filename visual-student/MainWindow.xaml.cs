@@ -33,13 +33,16 @@ namespace visual_student
         }
 
         private ObservableCollection<OpenedFile> _openedFiles;
-
+        private OpenedFile _selectedTab;
         ObservableCollection<OpenedFile> OpenedFiles { get { return _openedFiles; } set { _openedFiles = value; RaisePropertyChanged("OpenedFiles"); } }
+        OpenedFile SelectedTab { get { return _selectedTab; } set { _selectedTab = value; RaisePropertyChanged("SelectedTab"); } }
+
 
         public MainWindow()
         {
             InitializeComponent();
             _openedFiles = new ObservableCollection<OpenedFile>();
+            SelectedTab = new OpenedFile();
             openFiles.ItemsSource = OpenedFiles;
         }
 
@@ -63,6 +66,7 @@ namespace visual_student
             {
                 OpenedFile file = OpenedFile.LoadFromFileStream(opf.FileName, opf.SafeFileName);
                 OpenedFiles.Add(file);
+                openFiles.SelectedIndex = OpenedFiles.Count - 1;
             }
         }
 
@@ -71,6 +75,7 @@ namespace visual_student
             //New file button
             OpenedFile file = new OpenedFile();
             OpenedFiles.Add(file);
+            openFiles.SelectedIndex = OpenedFiles.Count - 1;
         }
 
         private void MenuItem_Click_4(object sender, RoutedEventArgs e)
@@ -103,11 +108,15 @@ namespace visual_student
                 {
                     TabItem it = openFiles.Items[i] as TabItem;
                     if ((string)it.Header == file.Name)
+                    {
+                        openFiles.SelectedIndex = i;
                         return;
+                    }
                 }
                 //Open new tab
                 OpenedFile openedfile = OpenedFile.LoadFromFileStream(file.Path, file.Name);
                 OpenedFiles.Add(openedfile);
+                openFiles.SelectedIndex = OpenedFiles.Count - 1;
             }
         }
     }
