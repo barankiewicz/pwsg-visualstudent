@@ -63,6 +63,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BindableRichTextBox.cs" />
     <Compile Include="OpenedFile.cs" />
     <Compile Include="TreeItem Classes\DirectoryItem.cs" />
     <Compile Include="TreeItem Classes\FileItem.cs" />
