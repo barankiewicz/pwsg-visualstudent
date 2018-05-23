@@ -24,6 +24,20 @@
         </ControlTemplate>
 
     </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="Open" Executed="OpenCommandBinding_Executed"></CommandBinding>
+        <CommandBinding Command="Save" Executed="SaveCommandBinding_Executed"></CommandBinding>
+        <CommandBinding Command="New" Executed="NewCommandBinding_Executed"></CommandBinding>
+        <CommandBinding Command="Select" Executed="ExecuteCommandBinding_Executed"></CommandBinding>
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Key="O" Modifiers="Control" Command="Open"></KeyBinding>
+        <KeyBinding Key="S" Modifiers="Control" Command="Save"></KeyBinding>
+        <KeyBinding Key="N" Modifiers="Control" Command="New"></KeyBinding>
+        <KeyBinding Key="F5" Command="Select"></KeyBinding>
+    </Window.InputBindings>
+    
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -34,10 +48,10 @@
         <DockPanel Grid.Row="0">
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
-                    <MenuItem Header="New" Click="MenuItem_Click_3" />
-                    <MenuItem Header="Save" x:Name="saveButton"/>
+                    <MenuItem Header="New" Command="New" InputGestureText="Ctrl+N" />
+                    <MenuItem Header="Save" x:Name="saveButton" Command="Save" InputGestureText="Ctrl+S"/>
                     <MenuItem Header="Save As..." x:Name="saveAsButton"/>
-                    <MenuItem Header="Open File" Click="MenuItem_Click_2" />
+                    <MenuItem Header="Open File" Command="Open" InputGestureText="Ctrl+O"/>
                     <MenuItem Header="Open Project" Click="MenuItem_Click_4" />
                     <Separator />
                     <MenuItem Header="Exit" Click="MenuItem_Click_1" />

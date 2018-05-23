@@ -119,5 +119,32 @@ namespace visual_student
                 openFiles.SelectedIndex = OpenedFiles.Count - 1;
             }
         }
+
+        private void OpenCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            OpenFileDialog opf = new OpenFileDialog();
+            opf.Filter = "C# Files (*cs) |*.cs";
+            if (opf.ShowDialog() == true)
+            {
+                OpenedFile file = OpenedFile.LoadFromFileStream(opf.FileName, opf.SafeFileName);
+                OpenedFiles.Add(file);
+                openFiles.SelectedIndex = OpenedFiles.Count - 1;
+            }
+        }
+        private void SaveCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+           //Implementation of save
+        }
+        private void NewCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            //New file button
+            OpenedFile file = new OpenedFile();
+            OpenedFiles.Add(file);
+            openFiles.SelectedIndex = OpenedFiles.Count - 1;
+        }
+        private void ExecuteCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            //Implementation of Execute
+        }
     }
 }
