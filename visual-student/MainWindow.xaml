@@ -90,7 +90,17 @@
                     <TabControl.ItemTemplate>
                         <!-- this is the header template-->
                         <DataTemplate>
-                            <TextBlock Text="{Binding name}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3"/>
+                                    <ColumnDefinition Width="25"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding name}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Text="*" Visibility="Hidden" VerticalAlignment="Center" />
+                                <Button Grid.Column="2" Content="X" VerticalAlignment="Center" Margin="3 0"/>
+                            </Grid>
+                            
                         </DataTemplate>
                     </TabControl.ItemTemplate>
                     <TabControl.ContentTemplate>
