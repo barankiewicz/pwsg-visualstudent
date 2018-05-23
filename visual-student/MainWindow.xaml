@@ -27,6 +27,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -41,11 +42,22 @@
                 </MenuItem>
                 <MenuItem Header="About" Click="MenuItem_Click"/>
             </Menu>
-
             <TextBox AcceptsReturn="True" Name="txtEditor" />
         </DockPanel>
 
         <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="70"/>
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" Margin="3 2">
+                <ComboBoxItem Content="Build"/>
+                <ComboBoxItem Content="Build + Run"/>
+            </ComboBox>
+            <Button Grid.Column="1" Margin="5 2" Content="Execute"/>
+        </Grid>
+
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*"/>
                 <ColumnDefinition Width="5"/>
@@ -61,7 +73,7 @@
                 <TabControl.ContentTemplate>
                     <!-- this is the body of the TabItem template-->
                     <DataTemplate>
-                        <TextBlock Text="{Binding body}" />
+                        <RichTextBox x:Name="fileTextBox"/>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>
