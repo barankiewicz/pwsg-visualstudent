@@ -32,7 +32,7 @@ namespace visual_student
               // Parse the XAML to a document (or use XamlReader.Parse())
               var xaml = GetDocumentXaml(richTextBox);
                     var doc = new FlowDocument();
-                    doc.FontSize = 13;
+                    doc.FontSize = 12;
                     doc.FontFamily = new System.Windows.Media.FontFamily("Monaco");
                     var range = new TextRange(doc.ContentStart, doc.ContentEnd);
 

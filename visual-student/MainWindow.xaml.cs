@@ -1,4 +1,7 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.Build.BuildEngine;
+using Microsoft.Build.Execution;
+using Microsoft.Build.Evaluation;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Build.Framework;
 
 namespace visual_student
 {
@@ -34,6 +38,7 @@ namespace visual_student
 
         private ObservableCollection<OpenedFile> _openedFiles;
         private OpenedFile _selectedTab;
+        private string ProjectPath;
         ObservableCollection<OpenedFile> OpenedFiles { get { return _openedFiles; } set { _openedFiles = value; RaisePropertyChanged("OpenedFiles"); } }
 
 
@@ -42,6 +47,7 @@ namespace visual_student
             InitializeComponent();
             _openedFiles = new ObservableCollection<OpenedFile>();
             openFiles.ItemsSource = OpenedFiles;
+            ProjectPath = "";
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -59,7 +65,8 @@ namespace visual_student
         {
             //Open project button
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-            if(fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            fbd.SelectedPath = "X:\\Programming\\C#\\testapp\\testapp";
+            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 for(int i = 0; i < openFiles.Items.Count; i++)
                 {
@@ -67,7 +74,7 @@ namespace visual_student
                 }
                 string mainPath = fbd.SelectedPath;
                 var itemProvider = new ItemProvider();
-                var items = itemProvider.GetItems(fbd.SelectedPath);
+                var items = itemProvider.GetItems(fbd.SelectedPath, out ProjectPath);
                 fileTree.DataContext = items;
                 fileTree.Items.Refresh();
             }
@@ -81,15 +88,6 @@ namespace visual_student
             if(selectedItem is FileItem)
             {
                 FileItem file = selectedItem as FileItem;
-                for (int i = 0; i < openFiles.Items.Count; i++)
-                {
-                    TabItem it = openFiles.Items[i] as TabItem;
-                    if ((string)it.Header == file.Name)
-                    {
-                        openFiles.SelectedIndex = i;
-                        return;
-                    }
-                }
                 //Open new tab
                 OpenedFile openedfile = OpenedFile.LoadFromFileStream(file.Path, file.Name);
                 OpenedFiles.Add(openedfile);
@@ -128,6 +126,30 @@ namespace visual_student
         {
             TabItem clicked = (TabItem)sender;
             MessageBox.Show("L:OL");
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            //Execute button
+            var path = ProjectPath;
+            var props = new Dictionary<string, string>
+            {
+                {"Configuration", "Debug"},
+                {"Platform", "AnyCPU"},
+                {"OutputPath", "X:\\Programming"}
+            };
+            var pc = new ProjectInstance(path, props, "14.0");
+            var buildParams = new BuildParameters()
+            {
+                DetailedSummary = true,
+                Loggers = new List<ILogger> { new ConsoleLogger() },
+                DefaultToolsVersion = "14.0"
+            };
+            var targets = new List<string> { "PrepareForBuild", "Build" };
+            var reqData = new BuildRequestData(pc, targets.ToArray());
+            BuildManager.DefaultBuildManager.BeginBuild(buildParams);
+            var buildResult = BuildManager.DefaultBuildManager.BuildRequest(reqData);
+            MessageBox.Show($"MSBuild build complete: {buildResult.OverallResult}");
         }
     }
 }

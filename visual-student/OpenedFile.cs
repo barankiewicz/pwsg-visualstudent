@@ -11,16 +11,19 @@ namespace visual_student
     {
         public string name { get; set; }
         public string body { get; set; }
-        public OpenedFile(string _name, string _body)
+        public string path { get; set; }
+        public OpenedFile(string _name, string _body, string _path)
         {
             name = _name;
             body = _body;
+            path = _path;
         }
 
         public OpenedFile()
         {
             name = "New File";
             body = " ";
+            path = "C:\\";
         }
 
         public static OpenedFile LoadFromFileStream(string path, string name)
@@ -34,7 +37,7 @@ namespace visual_student
                 sb.Append("\n");
             }
             sr.Close();
-            return new OpenedFile(name, sb.ToString());
+            return new OpenedFile(name, sb.ToString(), path);
         }
     }
 }
