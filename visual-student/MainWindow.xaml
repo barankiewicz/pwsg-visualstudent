@@ -86,9 +86,10 @@
                     <RowDefinition Height="5*"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
+                <!--<TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles}">-->
                 <TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles}">
                     <TabControl.ItemTemplate>
-                        <!-- this is the header template-->
+                         <!--this is the header template-->
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -98,15 +99,23 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="{Binding name}" VerticalAlignment="Center"/>
                                 <TextBlock Grid.Column="1" Text="*" Visibility="Hidden" VerticalAlignment="Center" />
-                                <Button Grid.Column="2" Content="X" VerticalAlignment="Center" Margin="3 0"/>
+                                <Button Grid.Column="2" Content="X" VerticalAlignment="Center" Margin="3 0" Click="Button_Click"/>
                             </Grid>
-                            
                         </DataTemplate>
                     </TabControl.ItemTemplate>
                     <TabControl.ContentTemplate>
-                        <!-- this is the body of the TabItem template-->
+                         <!--this is the body of the TabItem template-->
                         <DataTemplate>
-                            <RichTextBox x:Name="fileTextBox"/>
+                            <RichTextBox local:RichTextBoxHelper.DocumentXaml="{Binding body}">
+                                <RichTextBox.Resources>
+                                    <Style TargetType="{x:Type Paragraph}">
+                                        <Setter Property="Margin" Value="0"/>
+                                    </Style>
+                                    <Style TargetType="{x:Type FlowDocument}">
+                                        <Setter Property="FontSize" Value="1"/>
+                                    </Style>
+                                </RichTextBox.Resources>
+                            </RichTextBox>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
                 </TabControl>

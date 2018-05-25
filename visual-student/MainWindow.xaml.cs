@@ -35,14 +35,12 @@ namespace visual_student
         private ObservableCollection<OpenedFile> _openedFiles;
         private OpenedFile _selectedTab;
         ObservableCollection<OpenedFile> OpenedFiles { get { return _openedFiles; } set { _openedFiles = value; RaisePropertyChanged("OpenedFiles"); } }
-        OpenedFile SelectedTab { get { return _selectedTab; } set { _selectedTab = value; RaisePropertyChanged("SelectedTab"); } }
 
 
         public MainWindow()
         {
             InitializeComponent();
             _openedFiles = new ObservableCollection<OpenedFile>();
-            SelectedTab = new OpenedFile();
             openFiles.ItemsSource = OpenedFiles;
         }
 
@@ -55,27 +53,6 @@ namespace visual_student
         {
             //Exit button
             Close();
-        }
-
-        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
-        {
-            //Open file button
-            OpenFileDialog opf = new OpenFileDialog();
-            opf.Filter = "C# Files (*cs) |*.cs";
-            if(opf.ShowDialog() == true)
-            {
-                OpenedFile file = OpenedFile.LoadFromFileStream(opf.FileName, opf.SafeFileName);
-                OpenedFiles.Add(file);
-                openFiles.SelectedIndex = OpenedFiles.Count - 1;
-            }
-        }
-
-        private void MenuItem_Click_3(object sender, RoutedEventArgs e)
-        {
-            //New file button
-            OpenedFile file = new OpenedFile();
-            OpenedFiles.Add(file);
-            openFiles.SelectedIndex = OpenedFiles.Count - 1;
         }
 
         private void MenuItem_Click_4(object sender, RoutedEventArgs e)
@@ -145,6 +122,12 @@ namespace visual_student
         private void ExecuteCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             //Implementation of Execute
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            TabItem clicked = (TabItem)sender;
+            MessageBox.Show("L:OL");
         }
     }
 }

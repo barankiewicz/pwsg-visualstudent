@@ -20,7 +20,7 @@ namespace visual_student
         public OpenedFile()
         {
             name = "New File";
-            body = "";
+            body = " ";
         }
 
         public static OpenedFile LoadFromFileStream(string path, string name)
