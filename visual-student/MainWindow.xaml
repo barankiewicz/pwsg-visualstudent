@@ -60,16 +60,32 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding Code, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
-                <TextBlock Grid.Column="1" Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Grid.Column="2" Text="{Binding Line, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
+                <TextBlock Grid.Column="0" Text="{Binding Code, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Margin="7 0"/>
+                <TextBlock Grid.Column="1" Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}" Margin="7 0"/>
+                <TextBlock Grid.Column="2" Text="{Binding Line, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Margin="7 0"/>
             </Grid>
         </DataTemplate>
+        
 
         <Style x:Key="errorListBoxStyle" TargetType="{x:Type ListBoxItem}">
             <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="Background" Value="DarkRed"/>
+            <Setter Property="Background" Value="IndianRed"/>
             <Setter Property="ContentTemplate" Value="{StaticResource errorMessageTemplate}" />
+
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="PaleVioletRed" />
+                </Trigger>
+                <Trigger Property="IsSelected" Value="False">
+                    <Setter Property="Background" Value="IndianRed" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="PaleVioletRed" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="False">
+                    <Setter Property="Background" Value="IndianRed" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
     </Window.Resources>
@@ -173,7 +189,7 @@
                         <TextBox Text="{Binding ConsoleMessages}" x:Name="ConsoleMessagesTextBlock" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" TextWrapping="Wrap"/>
                     </TabItem>
                     <TabItem Header="Error List" Foreground="Red" x:Name="ErrorMessagesTabItem">
-                        <ListBox ItemsSource="{Binding ErrorMessages}" ItemContainerStyle="{StaticResource errorListBoxStyle}" x:Name="errorListBox" ScrollViewer.HorizontalScrollBarVisibility="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <ListBox ItemsSource="{Binding ErrorMessages, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource errorListBoxStyle}" x:Name="errorListBox" ScrollViewer.HorizontalScrollBarVisibility="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         </ListBox>
                     </TabItem>
                 </TabControl>

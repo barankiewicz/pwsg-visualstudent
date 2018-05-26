@@ -163,6 +163,8 @@ namespace visual_student
 
         private void Build_Project()
         {
+            ConsoleMessages = "";
+            ErrorMesssages.Clear();
             var props = new Dictionary<string, string>
             {
                 {"OutputPath", ProjectPath}
