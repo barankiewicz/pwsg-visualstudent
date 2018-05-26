@@ -31,12 +31,5 @@ namespace visual_student
             Code = code;
             Message = message;
         }
-
-        public ErrorMessage()
-        {
-            Line = "Programd(6,7)";
-            Code = "CS DUPECZKA";
-            Message = "DUPECZKADUPECZKADUPECZKA";
-        }
     }
 }
