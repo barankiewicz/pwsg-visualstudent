@@ -73,7 +73,36 @@ namespace visual_student
             } catch (UnauthorizedAccessException e)
             {
             }
+        }
 
+
+        public void SaveAs()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            if(Path != "")
+                sfd.InitialDirectory = System.IO.Path.GetDirectoryName(Path);
+            sfd.OverwritePrompt = true;
+            sfd.Filter = "C# Files (*cs) |*.cs";
+            if (sfd.ShowDialog() == true)
+            {
+                this.Path = System.IO.Path.GetFullPath(sfd.FileName);
+                this.Name = System.IO.Path.GetFileName(sfd.FileName);
+            }
+            else
+                return;
+
+            try
+            {
+                FileStream fs = new FileStream(Path, FileMode.Create, FileAccess.Write);
+                StreamWriter sw = new StreamWriter(fs);
+                for (int i = 0; i < Body.Length; i++)
+                    sw.Write(Body[i]);
+                sw.Close();
+                Modified = false;
+            }
+            catch (UnauthorizedAccessException e)
+            {
+            }
         }
 
         public static OpenedFile LoadFromFileStream(string path, string name)

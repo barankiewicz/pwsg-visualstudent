@@ -116,7 +116,7 @@
                 <MenuItem Header="_File">
                     <MenuItem Header="New" Command="New" InputGestureText="Ctrl+N" />
                     <MenuItem Header="Save" x:Name="saveButton" Command="Save" InputGestureText="Ctrl+S"/>
-                    <MenuItem Header="Save As..." x:Name="saveAsButton"/>
+                    <MenuItem Header="Save As..." x:Name="saveAsButton" Click="saveAsButton_Click"/>
                     <MenuItem Header="Open File" Command="Open" InputGestureText="Ctrl+O"/>
                     <MenuItem Header="Open Project" Click="MenuItem_Click_4" />
                     <Separator />

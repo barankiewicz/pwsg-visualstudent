@@ -140,6 +140,13 @@ namespace visual_student
             if(SelectedTab != null)
                 SelectedTab.Save();
         }
+
+        private void saveAsButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Implementation of saveAs
+            if (SelectedTab != null)
+                SelectedTab.SaveAs();
+        }
         private void NewCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             //New file button
@@ -226,6 +233,5 @@ namespace visual_student
             if(SelectedTab != null)
                 SelectedTab.Modified = true;
         }
-
     }
 }
