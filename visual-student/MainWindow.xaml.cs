@@ -176,11 +176,11 @@ namespace visual_student
             {
                 sb.AppendLine(x);
 
-                var divided = x.Split(new char[] { ' ', ':' });
+                var divided = x.Split(new char[] { ' ', ':' }, 4, StringSplitOptions.RemoveEmptyEntries);
                 var couldBeError = divided.Length > 1 ? true : false;
-                if (couldBeError && divided[2] == "error")
+                if (couldBeError && divided[1] == "error")
                 {
-                    ErrorMesssages.Add(new ErrorMessage());
+                    ErrorMesssages.Add(new ErrorMessage(divided[0], "error " + divided[2], divided[3]));
                 }
                     
             };
