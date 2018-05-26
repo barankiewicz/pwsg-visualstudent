@@ -68,11 +68,11 @@
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
-            <ComboBox Grid.Column="0" Margin ="0 0 " SelectedIndex="0" VerticalAlignment="Center">
-                <ComboBoxItem Content="Build"/>
-                <ComboBoxItem Content="Build + Run"/>
+            <ComboBox Grid.Column="0" Margin ="0 0 " SelectedIndex="0" VerticalAlignment="Center" x:Name="chooseComboBox">
+                <ComboBoxItem Content="Build" Uid="0"/>
+                <ComboBoxItem Content="Build + Run" Uid="1"/>
             </ComboBox>
-            <Button Grid.Column="1" Margin="6 6" Content="Execute" Click="Button_Click_1"/>
+            <Button Grid.Column="1" Margin="6 6" Content="Execute" Command="Select"/>
         </Grid>
 
         <Grid Grid.Row="2">
@@ -151,9 +151,12 @@
                             </Style.Triggers>
                         </Style>
                     </TabControl.Resources>
-                    <TabItem Header="Output" Foreground="DarkBlue">
+                    <TabItem Header="Output" Foreground="DarkBlue" x:Name="ConsoleMessagesTabItem">
+                        <TextBox Text="{Binding ConsoleMessages, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" x:Name="ConsoleMessagesTextBlock" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" TextWrapping="Wrap"/>
                     </TabItem>
-                    <TabItem Header="Error List" Foreground="Red"/>
+                    <TabItem Header="Error List" Foreground="Red" x:Name="ErrorMessagesTabItem">
+                        <TextBox Text="{Binding ErrorMessages, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" x:Name="ErrorMessagesTextBlock" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" TextWrapping="Wrap" Foreground="Red"/>
+                    </TabItem>
                 </TabControl>
             </Grid>
 

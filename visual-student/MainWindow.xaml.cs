@@ -37,17 +37,24 @@ namespace visual_student
         }
 
         private ObservableCollection<OpenedFile> _openedFiles;
+        private string _consoleMessages;
+        private string _errorMessages;
         private OpenedFile _selectedTab;
         private string ProjectPath;
         ObservableCollection<OpenedFile> OpenedFiles { get { return _openedFiles; } set { _openedFiles = value; RaisePropertyChanged("OpenedFiles"); } }
+        public string ConsoleMessages{ get { return _consoleMessages; } set { _consoleMessages = value; RaisePropertyChanged("ConsoleMessages"); } }
+        public string ErrorMesssages { get { return _errorMessages; } set { _errorMessages = value; RaisePropertyChanged("ErrorMesssages"); } }
 
 
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
             _openedFiles = new ObservableCollection<OpenedFile>();
             openFiles.ItemsSource = OpenedFiles;
             ProjectPath = "";
+            _consoleMessages = "";
+            _errorMessages = "";
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -120,6 +127,17 @@ namespace visual_student
         private void ExecuteCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             //Implementation of Execute
+            if (ProjectPath == "")
+            {
+                MessageBox.Show("No project is opened!");
+                return;
+            }
+
+            Build_Project();
+            //if (chooseComboBox.Uid == "0")
+            //    Build_Project();
+            //else
+            //    BuildAndRun_Project();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -128,17 +146,49 @@ namespace visual_student
             MessageBox.Show("L:OL");
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Message_Handler(object sender, BuildMessageEventArgs e)
         {
-            //Execute button
-            var path = ProjectPath;
+            TabItem clicked = (TabItem)sender;
+            MessageBox.Show("L:OL");
+        }
+
+        private void Build_Project()
+        {
+            var props = new Dictionary<string, string>
+            {
+                {"OutputPath", ProjectPath}
+            };
+            var pc = new ProjectInstance(ProjectPath, props, "14.0");
+
+            StringBuilder sb = new StringBuilder();
+            WriteHandler handler = (x) => sb.AppendLine(x);
+            var logger = new ConsoleLogger(LoggerVerbosity.Minimal, handler, null, null);
+           
+            var buildParams = new BuildParameters()
+            {
+                DetailedSummary = false,
+                Loggers = new List<ILogger> { logger },
+                DefaultToolsVersion = "14.0"
+            };
+            var targets = new List<string> { "Build" };
+            var reqData = new BuildRequestData(pc, targets.ToArray());
+
+            BuildManager.DefaultBuildManager.Build(buildParams, reqData);
+            ConsoleMessages = sb.ToString();
+            //ConsoleMessagesTextBlock.Text = ConsoleMessages;
+        }
+
+        private void BuildAndRun_Project()
+        {
             var props = new Dictionary<string, string>
             {
                 {"Configuration", "Debug"},
                 {"Platform", "AnyCPU"},
-                {"OutputPath", "X:\\Programming"}
+                {"OutputPath", ProjectPath}
             };
-            var pc = new ProjectInstance(path, props, "14.0");
+            var pc = new ProjectInstance(ProjectPath, props, "14.0");
+            var logger = new ConsoleLogger();
+            logger.Verbosity = LoggerVerbosity.Diagnostic;
             var buildParams = new BuildParameters()
             {
                 DetailedSummary = true,
@@ -149,7 +199,6 @@ namespace visual_student
             var reqData = new BuildRequestData(pc, targets.ToArray());
             BuildManager.DefaultBuildManager.BeginBuild(buildParams);
             var buildResult = BuildManager.DefaultBuildManager.BuildRequest(reqData);
-            MessageBox.Show($"MSBuild build complete: {buildResult.OverallResult}");
         }
     }
 }
