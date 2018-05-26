@@ -23,6 +23,7 @@ using Microsoft.Build.Framework;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Windows.Markup;
+using PluginContracts;
 
 namespace visual_student
 {
@@ -39,6 +40,7 @@ namespace visual_student
         }
 
         private ObservableCollection<OpenedFile> _openedFiles;
+        private ObservableCollection<IPlugin> _plugins;
         private string _consoleMessages;
         private List<ErrorMessage> _errorMessages;
         private OpenedFile _selectedTab;
@@ -51,6 +53,7 @@ namespace visual_student
         public List<ErrorMessage> ErrorMesssages { get { return _errorMessages; } set { _errorMessages = value; OnPropertyChanged(); } }
         public OpenedFile SelectedTab { get { return _selectedTab; } set { _selectedTab = value; OnPropertyChanged(); } }
         public int SelectedTabIndex { get { return _selectedTabIndex; } set { _selectedTabIndex = value; OnPropertyChanged(); } }
+        public ObservableCollection<IPlugin> Plugins { get { return _plugins; } set { _plugins = value; OnPropertyChanged(); } }
 
 
         public MainWindow()

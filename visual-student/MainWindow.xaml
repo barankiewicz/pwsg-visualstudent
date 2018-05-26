@@ -8,6 +8,7 @@
         Title="Visual Student" Height="600" Width="800" MinWidth="500" MinHeight="500" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
+        <CollectionViewSource Source="{Binding Plugins}" x:Key="source"/>
         <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"/>
         <HierarchicalDataTemplate DataType="{x:Type local:DirectoryItem}"
                                   ItemsSource="{Binding Items}">
@@ -122,8 +123,12 @@
                     <Separator />
                     <MenuItem Header="Exit" Click="MenuItem_Click_1" />
                 </MenuItem>
-                <MenuItem Header="Plugins">
-
+                <MenuItem Header="Plugins" ItemsSource="{Binding Plugins}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style>
+                            <Setter Property="MenuItem.Header" Value="DUperka" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
                 </MenuItem>
                 <MenuItem Header="About" Click="MenuItem_Click"/>
             </Menu>
