@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace visual_student
 {
@@ -22,15 +23,18 @@ namespace visual_student
         private string _name;
         private string _body;
         private string _path;
+        private bool _modified;
 
         public string Name { get { return _name; } set { _name = value; OnPropertyChanged(); } }
         public string Body { get { return _body; } set { _body = value; OnPropertyChanged(); } }
         public string Path { get { return _path; } set { _path = value; OnPropertyChanged(); } }
+        public bool Modified { get { return _modified; } set { _modified = value; OnPropertyChanged(); } }
         public OpenedFile(string name, string body, string path)
         {
             Name = name;
             Body = body;
             Path = path;
+            Modified = false;
         }
 
         public OpenedFile()
@@ -38,6 +42,7 @@ namespace visual_student
             Name = "New File";
             Body = "";
             Path = "";
+            Modified = true;
         }
 
         public void Save()
@@ -64,6 +69,7 @@ namespace visual_student
                 for (int i = 0; i < Body.Length; i++)
                     sw.Write(Body[i]);
                 sw.Close();
+                Modified = false;
             } catch (UnauthorizedAccessException e)
             {
             }

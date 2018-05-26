@@ -71,6 +71,7 @@ namespace visual_student
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
+            //About button
             MessageBox.Show("This is a simple C# editor and compiler.", "About", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -212,19 +213,11 @@ namespace visual_student
             proc.Start();
         }
 
-        private void RichTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void RichTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            MessageBox.Show(OpenedFiles[0].Body);
+            if(SelectedTab != null)
+                SelectedTab.Modified = true;
         }
 
-        private void Paragraph_TextInput(object sender, TextCompositionEventArgs e)
-        {
-            MessageBox.Show(OpenedFiles[0].Body);
-        }
-
-        private void Run_TextInput(object sender, TextCompositionEventArgs e)
-        {
-            MessageBox.Show(OpenedFiles[0].Body);
-        }
     }
 }

@@ -66,6 +66,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="EnumConverter.cs" />
     <Compile Include="ErrorMessage.cs" />
     <Compile Include="OpenedFile.cs" />
     <Compile Include="TreeItem Classes\DirectoryItem.cs" />

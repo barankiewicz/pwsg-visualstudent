@@ -8,6 +8,7 @@
         Title="Visual Student" Height="600" Width="800" MinWidth="500" MinHeight="500" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"/>
         <HierarchicalDataTemplate DataType="{x:Type local:DirectoryItem}"
                                   ItemsSource="{Binding Items}">
             <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Path}" />
@@ -163,17 +164,17 @@
                                     <ColumnDefinition Width="25"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Text="*" Visibility="Hidden" VerticalAlignment="Center" />
-                                <Button Grid.Column="2" Content="X" VerticalAlignment="Center" Margin="3 0" Click="Button_Click"/>
+                                <TextBlock Grid.Column="1" Text="*" Visibility="{Binding Modified, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource boolToVisibilityConverter}}" VerticalAlignment="Center"/>
+                                <Button Grid.Column="2" Content="X" VerticalAlignment="Center" Margin="3 0" Click="Button_Click" />
                             </Grid>
                         </DataTemplate>
                     </TabControl.ItemTemplate>
                     <TabControl.ContentTemplate>
                         <DataTemplate>
-                            <RichTextBox VerticalScrollBarVisibility="Auto">
+                            <RichTextBox VerticalScrollBarVisibility="Auto" PreviewTextInput="RichTextBox_PreviewTextInput">
                                 <FlowDocument FontSize="12" FontFamily="Monaco">
-                                    <Paragraph Margin="0" TextInput="Paragraph_TextInput">
-                                        <Run Text="{Binding Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextInput="Run_TextInput"/>
+                                    <Paragraph Margin="0">
+                                        <Run Text="{Binding Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Paragraph>
                                 </FlowDocument>
                             </RichTextBox>
