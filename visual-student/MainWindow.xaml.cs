@@ -22,6 +22,7 @@ using System.Windows.Shapes;
 using Microsoft.Build.Framework;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using System.Windows.Markup;
 
 namespace visual_student
 {
@@ -43,11 +44,13 @@ namespace visual_student
         private OpenedFile _selectedTab;
         private string ProjectPath;
         private string BuildPath;
+        private int _selectedTabIndex;
 
         public ObservableCollection<OpenedFile> OpenedFiles { get { return _openedFiles; } set { _openedFiles = value; OnPropertyChanged(); } }
         public string ConsoleMessages{ get { return _consoleMessages; } set { _consoleMessages = value; OnPropertyChanged(); } }
         public List<ErrorMessage> ErrorMesssages { get { return _errorMessages; } set { _errorMessages = value; OnPropertyChanged(); } }
         public OpenedFile SelectedTab { get { return _selectedTab; } set { _selectedTab = value; OnPropertyChanged(); } }
+        public int SelectedTabIndex { get { return _selectedTabIndex; } set { _selectedTabIndex = value; OnPropertyChanged(); } }
 
 
         public MainWindow()
@@ -60,6 +63,7 @@ namespace visual_student
             ProjectPath = "";
             _consoleMessages = "";
             _selectedTab = null;
+            _selectedTabIndex = 0;
 
             openFiles.ItemsSource = OpenedFiles;
             errorListBox.ItemsSource = ErrorMesssages;
@@ -85,7 +89,7 @@ namespace visual_student
             {
                 for(int i = 0; i < openFiles.Items.Count; i++)
                 {
-                    openFiles.Items.Remove(openFiles.Items[i]);
+                    OpenedFiles.RemoveAt(i);
                 }
                 string mainPath = fbd.SelectedPath;
                 var itemProvider = new ItemProvider();
@@ -106,7 +110,7 @@ namespace visual_student
                 //Open new tab
                 OpenedFile openedfile = OpenedFile.LoadFromFileStream(file.Path, file.Name);
                 OpenedFiles.Add(openedfile);
-                openFiles.SelectedIndex = OpenedFiles.Count - 1;
+                SelectedTabIndex = OpenedFiles.Count - 1;
             }
         }
 
@@ -118,7 +122,7 @@ namespace visual_student
             {
                 OpenedFile file = OpenedFile.LoadFromFileStream(opf.FileName, opf.SafeFileName);
                 OpenedFiles.Add(file);
-                openFiles.SelectedIndex = OpenedFiles.Count - 1;
+                SelectedTabIndex = OpenedFiles.Count - 1;
             }
         }
         private void SaveCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -126,14 +130,13 @@ namespace visual_student
             //Implementation of save
             if(SelectedTab != null)
                 SelectedTab.Save();
-            openFiles.Items.Refresh();
         }
         private void NewCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             //New file button
             OpenedFile file = new OpenedFile();
             OpenedFiles.Add(file);
-            openFiles.SelectedIndex = OpenedFiles.Count - 1;
+            SelectedTabIndex = OpenedFiles.Count - 1;
         }
         private void ExecuteCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -150,9 +153,8 @@ namespace visual_student
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(SelectedTab.Body);
-            OpenedFiles.Remove(SelectedTab);
-            SelectedTab = null;
+            //Close tab button
+            OpenedFiles.RemoveAt(0);
         }
 
         private bool Build_Project()
@@ -208,6 +210,21 @@ namespace visual_student
             proc.StartInfo.FileName = fullpath;
             proc.StartInfo.WorkingDirectory = BuildPath;
             proc.Start();
+        }
+
+        private void RichTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            MessageBox.Show(OpenedFiles[0].Body);
+        }
+
+        private void Paragraph_TextInput(object sender, TextCompositionEventArgs e)
+        {
+            MessageBox.Show(OpenedFiles[0].Body);
+        }
+
+        private void Run_TextInput(object sender, TextCompositionEventArgs e)
+        {
+            MessageBox.Show(OpenedFiles[0].Body);
         }
     }
 }

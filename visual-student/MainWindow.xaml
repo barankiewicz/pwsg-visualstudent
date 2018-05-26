@@ -152,7 +152,7 @@
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
                 <!--<TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles}">-->
-                <TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedTab}">
+                <TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}" SelectedItem="{Binding SelectedTab, Mode=TwoWay}">
                     <TabControl.ItemTemplate>
                          <!--this is the header template-->
                         <DataTemplate>
@@ -169,17 +169,13 @@
                         </DataTemplate>
                     </TabControl.ItemTemplate>
                     <TabControl.ContentTemplate>
-                         <!--this is the body of the TabItem template-->
                         <DataTemplate>
-                            <RichTextBox local:RichTextBoxHelper.DocumentXaml="{Binding Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalScrollBarVisibility="Auto">
-                                <RichTextBox.Resources>
-                                    <Style TargetType="{x:Type Paragraph}">
-                                        <Setter Property="Margin" Value="0"/>
-                                    </Style>
-                                    <Style TargetType="{x:Type FlowDocument}">
-                                        <Setter Property="FontSize" Value="1"/>
-                                    </Style>
-                                </RichTextBox.Resources>
+                            <RichTextBox VerticalScrollBarVisibility="Auto">
+                                <FlowDocument FontSize="12" FontFamily="Monaco">
+                                    <Paragraph Margin="0" TextInput="Paragraph_TextInput">
+                                        <Run Text="{Binding Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextInput="Run_TextInput"/>
+                                    </Paragraph>
+                                </FlowDocument>
                             </RichTextBox>
                         </DataTemplate>
                     </TabControl.ContentTemplate>

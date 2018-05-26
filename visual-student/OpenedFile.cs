@@ -59,7 +59,7 @@ namespace visual_student
 
             try
             {
-                FileStream fs = new FileStream(Path, FileMode.CreateNew, FileAccess.Write);
+                FileStream fs = new FileStream(Path, FileMode.Create, FileAccess.Write);
                 StreamWriter sw = new StreamWriter(fs);
                 for (int i = 0; i < Body.Length; i++)
                     sw.Write(Body[i]);
