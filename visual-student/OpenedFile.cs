@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,19 +14,18 @@ namespace visual_student
     {
         //Implementation of INotifyPropertyChanged interface 
         public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged(string propertyName)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private string _name;
         private string _body;
         private string _path;
 
-        public string Name { get { return _name; } set { _name = value; RaisePropertyChanged("Name"); } }
-        public string Body { get { return _body; } set { _body = value; RaisePropertyChanged("Body"); } }
-        public string Path { get { return _path; } set { _path = value; RaisePropertyChanged("Path"); } }
+        public string Name { get { return _name; } set { _name = value; OnPropertyChanged(); } }
+        public string Body { get { return _body; } set { _body = value; OnPropertyChanged(); } }
+        public string Path { get { return _path; } set { _path = value; OnPropertyChanged(); } }
         public OpenedFile(string name, string body, string path)
         {
             Name = name;

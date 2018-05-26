@@ -23,6 +23,36 @@
             </RichTextBox>
         </ControlTemplate>
 
+        <Style TargetType="TabItem" x:Key="AnimatedTabItem">
+            <Setter Property="LayoutTransform">
+                <Setter.Value>
+                    <ScaleTransform/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Button.MouseEnter">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleX"
+                                                 To="1.2" Duration="0:0:0.5"></DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Button.MouseLeave">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleX"
+                                                  Duration="0:0:0.3"></DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
         <DataTemplate x:Key="errorMessageTemplate">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
@@ -30,9 +60,9 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Dupeczka" FontWeight="Bold"/>
-                <TextBlock Grid.Column="1" Text="DupeczkaDupeczkaDupeczkaDupeczkaDupeczka"/>
-                <TextBlock Grid.Column="2" Text="Dupeczka" FontWeight="Bold"/>
+                <TextBlock Grid.Column="0" Text="{Binding Code, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
+                <TextBlock Grid.Column="1" Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Grid.Column="2" Text="{Binding Line, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
             </Grid>
         </DataTemplate>
 
@@ -138,43 +168,13 @@
                         </DataTemplate>
                     </TabControl.ContentTemplate>
                 </TabControl>
-                <TabControl Grid.Row="1" x:Name="consoleControl" Margin="0 3" TabStripPlacement="Bottom">
-                    <TabControl.Resources>
-                        <Style TargetType="TabItem">
-                            <Setter Property="LayoutTransform">
-                                <Setter.Value>
-                                    <ScaleTransform/>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <EventTrigger RoutedEvent="Button.MouseEnter">
-                                    <EventTrigger.Actions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleX"
-                                                 To="1.2" Duration="0:0:0.5"></DoubleAnimation>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </EventTrigger.Actions>
-                                </EventTrigger>
-                                <EventTrigger RoutedEvent="Button.MouseLeave">
-                                    <EventTrigger.Actions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleX"
-                                                  Duration="0:0:0.3"></DoubleAnimation>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </EventTrigger.Actions>
-                                </EventTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TabControl.Resources>
+                <TabControl Grid.Row="1" x:Name="consoleControl" Margin="0 3" TabStripPlacement="Bottom" ItemContainerStyle="{StaticResource AnimatedTabItem}">
                     <TabItem Header="Output" Foreground="DarkBlue" x:Name="ConsoleMessagesTabItem">
-                        <TextBox Text="{Binding ConsoleMessages, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" x:Name="ConsoleMessagesTextBlock" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" TextWrapping="Wrap"/>
+                        <TextBox Text="{Binding ConsoleMessages}" x:Name="ConsoleMessagesTextBlock" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" TextWrapping="Wrap"/>
                     </TabItem>
                     <TabItem Header="Error List" Foreground="Red" x:Name="ErrorMessagesTabItem">
-                        <ListBox ItemsSource="{Binding ErrorMessages, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource errorListBoxStyle}" x:Name="errorListBox" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+                        <ListBox ItemsSource="{Binding ErrorMessages}" ItemContainerStyle="{StaticResource errorListBoxStyle}" x:Name="errorListBox" ScrollViewer.HorizontalScrollBarVisibility="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        </ListBox>
                     </TabItem>
                 </TabControl>
             </Grid>

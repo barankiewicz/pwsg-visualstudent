@@ -20,6 +20,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Build.Framework;
+using System.Runtime.CompilerServices;
 
 namespace visual_student
 {
@@ -30,33 +31,36 @@ namespace visual_student
     {
         //Implementation of INotifyPropertyChanged interface
         public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged(string propertyName)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private ObservableCollection<OpenedFile> _openedFiles;
         private string _consoleMessages;
-        private List<string> _errorMessages;
+        private List<ErrorMessage> _errorMessages;
         private OpenedFile _selectedTab;
         private string ProjectPath;
-        ObservableCollection<OpenedFile> OpenedFiles { get { return _openedFiles; } set { _openedFiles = value; RaisePropertyChanged("OpenedFiles"); } }
-        public string ConsoleMessages{ get { return _consoleMessages; } set { _consoleMessages = value; RaisePropertyChanged("ConsoleMessages"); } }
-        public List<string> ErrorMesssages { get { return _errorMessages; } set { _errorMessages = value; RaisePropertyChanged("ErrorMesssages"); } }
-        public OpenedFile SelectedTab { get { return _selectedTab; } set { _selectedTab = value; RaisePropertyChanged("SelectedTab"); } }
+
+        public ObservableCollection<OpenedFile> OpenedFiles { get { return _openedFiles; } set { _openedFiles = value; OnPropertyChanged(); } }
+        public string ConsoleMessages{ get { return _consoleMessages; } set { _consoleMessages = value; OnPropertyChanged(); } }
+        public List<ErrorMessage> ErrorMesssages { get { return _errorMessages; } set { _errorMessages = value; OnPropertyChanged(); } }
+        public OpenedFile SelectedTab { get { return _selectedTab; } set { _selectedTab = value; OnPropertyChanged(); } }
 
 
         public MainWindow()
         {
-            InitializeComponent();
             DataContext = this;
+            InitializeComponent();
             _openedFiles = new ObservableCollection<OpenedFile>();
-            openFiles.ItemsSource = OpenedFiles;
+            _errorMessages = new List<ErrorMessage>();
+
             ProjectPath = "";
             _consoleMessages = "";
-            _errorMessages = new List<string>();
             _selectedTab = null;
+
+            openFiles.ItemsSource = OpenedFiles;
+            errorListBox.ItemsSource = ErrorMesssages;
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -173,7 +177,10 @@ namespace visual_student
                 var divided = x.Split(new char[] { ' ', ':' });
                 var couldBeError = divided.Length > 1 ? true : false;
                 if (couldBeError && divided[2] == "error")
-                    ErrorMesssages.Add(x);
+                {
+                    ErrorMesssages.Add(new ErrorMessage());
+                }
+                    
             };
             var logger = new ConsoleLogger(LoggerVerbosity.Minimal, handler, null, null);
            
@@ -188,7 +195,6 @@ namespace visual_student
 
             BuildManager.DefaultBuildManager.Build(buildParams, reqData);
             ConsoleMessages = sb.ToString();
-            RaisePropertyChanged("ErrorMessages");
             //ConsoleMessagesTextBlock.Text = ConsoleMessages;
         }
 
