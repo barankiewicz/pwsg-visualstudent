@@ -38,12 +38,12 @@ namespace visual_student
 
         private ObservableCollection<OpenedFile> _openedFiles;
         private string _consoleMessages;
-        private string _errorMessages;
+        private List<string> _errorMessages;
         private OpenedFile _selectedTab;
         private string ProjectPath;
         ObservableCollection<OpenedFile> OpenedFiles { get { return _openedFiles; } set { _openedFiles = value; RaisePropertyChanged("OpenedFiles"); } }
         public string ConsoleMessages{ get { return _consoleMessages; } set { _consoleMessages = value; RaisePropertyChanged("ConsoleMessages"); } }
-        public string ErrorMesssages { get { return _errorMessages; } set { _errorMessages = value; RaisePropertyChanged("ErrorMesssages"); } }
+        public List<string> ErrorMesssages { get { return _errorMessages; } set { _errorMessages = value; RaisePropertyChanged("ErrorMesssages"); } }
         public OpenedFile SelectedTab { get { return _selectedTab; } set { _selectedTab = value; RaisePropertyChanged("SelectedTab"); } }
 
 
@@ -55,7 +55,7 @@ namespace visual_student
             openFiles.ItemsSource = OpenedFiles;
             ProjectPath = "";
             _consoleMessages = "";
-            _errorMessages = "";
+            _errorMessages = new List<string>();
             _selectedTab = null;
         }
 
@@ -166,7 +166,15 @@ namespace visual_student
             var pc = new ProjectInstance(ProjectPath, props, "14.0");
 
             StringBuilder sb = new StringBuilder();
-            WriteHandler handler = (x) => sb.AppendLine(x);
+            WriteHandler handler = (x) =>
+            {
+                sb.AppendLine(x);
+
+                var divided = x.Split(new char[] { ' ', ':' });
+                var couldBeError = divided.Length > 1 ? true : false;
+                if (couldBeError && divided[2] == "error")
+                    ErrorMesssages.Add(x);
+            };
             var logger = new ConsoleLogger(LoggerVerbosity.Minimal, handler, null, null);
            
             var buildParams = new BuildParameters()
@@ -180,6 +188,7 @@ namespace visual_student
 
             BuildManager.DefaultBuildManager.Build(buildParams, reqData);
             ConsoleMessages = sb.ToString();
+            RaisePropertyChanged("ErrorMessages");
             //ConsoleMessagesTextBlock.Text = ConsoleMessages;
         }
 

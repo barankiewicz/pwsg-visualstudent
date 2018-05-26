@@ -23,6 +23,25 @@
             </RichTextBox>
         </ControlTemplate>
 
+        <DataTemplate x:Key="errorMessageTemplate">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Dupeczka" FontWeight="Bold"/>
+                <TextBlock Grid.Column="1" Text="DupeczkaDupeczkaDupeczkaDupeczkaDupeczka"/>
+                <TextBlock Grid.Column="2" Text="Dupeczka" FontWeight="Bold"/>
+            </Grid>
+        </DataTemplate>
+
+        <Style x:Key="errorListBoxStyle" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="DarkRed"/>
+            <Setter Property="ContentTemplate" Value="{StaticResource errorMessageTemplate}" />
+        </Style>
+
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="Open" Executed="OpenCommandBinding_Executed"></CommandBinding>
@@ -87,7 +106,7 @@
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
                 <!--<TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles}">-->
-                <TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles}" SelectedItem="{Binding SelectedTab}">
+                <TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedTab}">
                     <TabControl.ItemTemplate>
                          <!--this is the header template-->
                         <DataTemplate>
@@ -97,7 +116,7 @@
                                     <ColumnDefinition Width="3"/>
                                     <ColumnDefinition Width="25"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding name}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
                                 <TextBlock Grid.Column="1" Text="*" Visibility="Hidden" VerticalAlignment="Center" />
                                 <Button Grid.Column="2" Content="X" VerticalAlignment="Center" Margin="3 0" Click="Button_Click"/>
                             </Grid>
@@ -106,7 +125,7 @@
                     <TabControl.ContentTemplate>
                          <!--this is the body of the TabItem template-->
                         <DataTemplate>
-                            <RichTextBox local:RichTextBoxHelper.DocumentXaml="{Binding body}" VerticalScrollBarVisibility="Auto">
+                            <RichTextBox local:RichTextBoxHelper.DocumentXaml="{Binding Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalScrollBarVisibility="Auto">
                                 <RichTextBox.Resources>
                                     <Style TargetType="{x:Type Paragraph}">
                                         <Setter Property="Margin" Value="0"/>
@@ -155,7 +174,7 @@
                         <TextBox Text="{Binding ConsoleMessages, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" x:Name="ConsoleMessagesTextBlock" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" TextWrapping="Wrap"/>
                     </TabItem>
                     <TabItem Header="Error List" Foreground="Red" x:Name="ErrorMessagesTabItem">
-                        <TextBox Text="{Binding ErrorMessages, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" x:Name="ErrorMessagesTextBlock" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" TextWrapping="Wrap" Foreground="Red"/>
+                        <ListBox ItemsSource="{Binding ErrorMessages, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource errorListBoxStyle}" x:Name="errorListBox" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
                     </TabItem>
                 </TabControl>
             </Grid>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,28 +9,40 @@ using System.Threading.Tasks;
 
 namespace visual_student
 {
-    public class OpenedFile
+    public class OpenedFile : INotifyPropertyChanged
     {
-        public string name { get; set; }
-        public string body { get; set; }
-        public string path { get; set; }
-        public OpenedFile(string _name, string _body, string _path)
+        //Implementation of INotifyPropertyChanged interface 
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void RaisePropertyChanged(string propertyName)
         {
-            name = _name;
-            body = _body;
-            path = _path;
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private string _name;
+        private string _body;
+        private string _path;
+
+        public string Name { get { return _name; } set { _name = value; RaisePropertyChanged("Name"); } }
+        public string Body { get { return _body; } set { _body = value; RaisePropertyChanged("Body"); } }
+        public string Path { get { return _path; } set { _path = value; RaisePropertyChanged("Path"); } }
+        public OpenedFile(string name, string body, string path)
+        {
+            Name = name;
+            Body = body;
+            Path = path;
         }
 
         public OpenedFile()
         {
-            name = "New File";
-            body = "";
-            path = "";
+            Name = "New File";
+            Body = "";
+            Path = "";
         }
 
         public void Save()
         {
-            if(path=="")
+            if(Path == "")
             {
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.Filter = "C# Files (*cs) |*.cs";
@@ -37,8 +50,8 @@ namespace visual_student
                 sfd.OverwritePrompt = true;
                 if (sfd.ShowDialog() == true)
                 {
-                    this.path = Path.GetFullPath(sfd.FileName);
-                    this.name = Path.GetFileName(sfd.FileName);
+                    this.Path = System.IO.Path.GetFullPath(sfd.FileName);
+                    this.Name = System.IO.Path.GetFileName(sfd.FileName);
                 }
                 else
                     return;
@@ -46,10 +59,10 @@ namespace visual_student
 
             try
             {
-                FileStream fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write);
+                FileStream fs = new FileStream(Path, FileMode.CreateNew, FileAccess.Write);
                 StreamWriter sw = new StreamWriter(fs);
-                for (int i = 0; i < body.Length; i++)
-                    sw.Write(body[i]);
+                for (int i = 0; i < Body.Length; i++)
+                    sw.Write(Body[i]);
                 sw.Close();
             } catch (UnauthorizedAccessException e)
             {
