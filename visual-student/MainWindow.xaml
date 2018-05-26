@@ -87,7 +87,7 @@
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
                 <!--<TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles}">-->
-                <TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles}">
+                <TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles}" SelectedItem="{Binding SelectedTab}">
                     <TabControl.ItemTemplate>
                          <!--this is the header template-->
                         <DataTemplate>

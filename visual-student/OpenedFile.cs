@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace visual_student
 {
@@ -23,8 +23,8 @@ namespace visual_student
         public OpenedFile()
         {
             name = "New File";
-            body = " ";
-            path = "C:\\";
+            body = "";
+            path = "";
         }
 
         public void Save()
@@ -33,15 +33,28 @@ namespace visual_student
             {
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.Filter = "C# Files (*cs) |*.cs";
-                sfd.CheckFileExists = true;
-                if (sfd.ShowDialog() == DialogResult.OK)
-                    this.path = sfd.FileName;
+                sfd.AddExtension = true;
+                sfd.OverwritePrompt = true;
+                if (sfd.ShowDialog() == true)
+                {
+                    this.path = Path.GetFullPath(sfd.FileName);
+                    this.name = Path.GetFileName(sfd.FileName);
+                }
+                else
+                    return;
             }
 
-            StreamWriter sw = new StreamWriter(new FileStream(path, FileMode.Create));
-            for (int i = 0; i < body.Length; i++)
-                sw.Write(body[i]);
-            sw.Close();
+            try
+            {
+                FileStream fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write);
+                StreamWriter sw = new StreamWriter(fs);
+                for (int i = 0; i < body.Length; i++)
+                    sw.Write(body[i]);
+                sw.Close();
+            } catch (UnauthorizedAccessException e)
+            {
+            }
+
         }
 
         public static OpenedFile LoadFromFileStream(string path, string name)

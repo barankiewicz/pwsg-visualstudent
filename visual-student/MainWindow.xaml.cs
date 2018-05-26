@@ -44,6 +44,7 @@ namespace visual_student
         ObservableCollection<OpenedFile> OpenedFiles { get { return _openedFiles; } set { _openedFiles = value; RaisePropertyChanged("OpenedFiles"); } }
         public string ConsoleMessages{ get { return _consoleMessages; } set { _consoleMessages = value; RaisePropertyChanged("ConsoleMessages"); } }
         public string ErrorMesssages { get { return _errorMessages; } set { _errorMessages = value; RaisePropertyChanged("ErrorMesssages"); } }
+        public OpenedFile SelectedTab { get { return _selectedTab; } set { _selectedTab = value; RaisePropertyChanged("SelectedTab"); } }
 
 
         public MainWindow()
@@ -55,6 +56,7 @@ namespace visual_student
             ProjectPath = "";
             _consoleMessages = "";
             _errorMessages = "";
+            _selectedTab = null;
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -115,7 +117,10 @@ namespace visual_student
         }
         private void SaveCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-           //Implementation of save
+            //Implementation of save
+            if(SelectedTab != null)
+                SelectedTab.Save();
+            openFiles.Items.Refresh();
         }
         private void NewCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
