@@ -24,6 +24,7 @@ using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Windows.Markup;
 using PluginContracts;
+using System.Reflection;
 
 namespace visual_student
 {
@@ -62,6 +63,8 @@ namespace visual_student
             InitializeComponent();
             _openedFiles = new ObservableCollection<OpenedFile>();
             _errorMessages = new List<ErrorMessage>();
+            _plugins = new ObservableCollection<IPlugin>();
+            Load_Plugins();
 
             ProjectPath = "";
             _consoleMessages = "";
@@ -240,6 +243,27 @@ namespace visual_student
         {
             if(SelectedTab != null)
                 SelectedTab.Modified = true;
+        }
+
+        private void Load_Plugins()
+        {
+            var files = Directory.EnumerateFiles(System.AppDomain.CurrentDomain.BaseDirectory);
+            foreach(string file in files)
+                if(System.IO.Path.GetExtension(file) == ".dll")
+                {
+                    Assembly asm = Assembly.LoadFile(file);
+                    Type[] tlist = asm.GetTypes();
+                    foreach (Type t in tlist)
+                    {
+                        var i = t.GetInterface("IPlugin");
+                        if (i != null)
+                        {
+                            IPlugin myPlugin = Activator.CreateInstance(t) as IPlugin;
+                            Plugins.Add(myPlugin);
+                            break;
+                        }
+                    }
+                }
         }
     }
 }
