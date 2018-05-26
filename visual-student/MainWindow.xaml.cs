@@ -21,6 +21,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Build.Framework;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace visual_student
 {
@@ -41,6 +42,7 @@ namespace visual_student
         private List<ErrorMessage> _errorMessages;
         private OpenedFile _selectedTab;
         private string ProjectPath;
+        private string BuildPath;
 
         public ObservableCollection<OpenedFile> OpenedFiles { get { return _openedFiles; } set { _openedFiles = value; OnPropertyChanged(); } }
         public string ConsoleMessages{ get { return _consoleMessages; } set { _consoleMessages = value; OnPropertyChanged(); } }
@@ -141,33 +143,30 @@ namespace visual_student
                 MessageBox.Show("No project is opened!");
                 return;
             }
-
-            Build_Project();
-            //if (chooseComboBox.Uid == "0")
-            //    Build_Project();
-            //else
-            //    BuildAndRun_Project();
+            bool flag = Build_Project();
+            if (chooseComboBox.SelectedIndex == 1 && flag)
+                Run_Project();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            TabItem clicked = (TabItem)sender;
-            MessageBox.Show("L:OL");
+            MessageBox.Show(SelectedTab.Body);
+            OpenedFiles.Remove(SelectedTab);
+            SelectedTab = null;
         }
 
-        private void Message_Handler(object sender, BuildMessageEventArgs e)
-        {
-            TabItem clicked = (TabItem)sender;
-            MessageBox.Show("L:OL");
-        }
-
-        private void Build_Project()
+        private bool Build_Project()
         {
             ConsoleMessages = "";
+            BuildPath = System.IO.Path.GetDirectoryName(ProjectPath) + "\\build";
+
+            if(Directory.Exists(BuildPath))
+                Directory.Delete(BuildPath, true);
+
             ErrorMesssages.Clear();
             var props = new Dictionary<string, string>
             {
-                {"OutputPath", ProjectPath}
+                {"OutputPath", BuildPath}
             };
             var pc = new ProjectInstance(ProjectPath, props, "14.0");
 
@@ -179,12 +178,10 @@ namespace visual_student
                 var divided = x.Split(new char[] { ' ', ':' }, 4, StringSplitOptions.RemoveEmptyEntries);
                 var couldBeError = divided.Length > 1 ? true : false;
                 if (couldBeError && divided[1] == "error")
-                {
                     ErrorMesssages.Add(new ErrorMessage(divided[0], "error " + divided[2], divided[3]));
-                }
                     
             };
-            var logger = new ConsoleLogger(LoggerVerbosity.Minimal, handler, null, null);
+            var logger = new ConsoleLogger(LoggerVerbosity.Normal, handler, null, null);
            
             var buildParams = new BuildParameters()
             {
@@ -195,32 +192,22 @@ namespace visual_student
             var targets = new List<string> { "Build" };
             var reqData = new BuildRequestData(pc, targets.ToArray());
 
-            BuildManager.DefaultBuildManager.Build(buildParams, reqData);
+            var res = BuildManager.DefaultBuildManager.Build(buildParams, reqData);
             ConsoleMessages = sb.ToString();
-            //ConsoleMessagesTextBlock.Text = ConsoleMessages;
+
+            if (res.OverallResult == BuildResultCode.Failure)
+                return false;
+            return true;
         }
 
-        private void BuildAndRun_Project()
+        private void Run_Project()
         {
-            var props = new Dictionary<string, string>
-            {
-                {"Configuration", "Debug"},
-                {"Platform", "AnyCPU"},
-                {"OutputPath", ProjectPath}
-            };
-            var pc = new ProjectInstance(ProjectPath, props, "14.0");
-            var logger = new ConsoleLogger();
-            logger.Verbosity = LoggerVerbosity.Diagnostic;
-            var buildParams = new BuildParameters()
-            {
-                DetailedSummary = true,
-                Loggers = new List<ILogger> { new ConsoleLogger() },
-                DefaultToolsVersion = "14.0"
-            };
-            var targets = new List<string> { "PrepareForBuild", "Build" };
-            var reqData = new BuildRequestData(pc, targets.ToArray());
-            BuildManager.DefaultBuildManager.BeginBuild(buildParams);
-            var buildResult = BuildManager.DefaultBuildManager.BuildRequest(reqData);
+            string file = System.IO.Path.GetFileNameWithoutExtension(ProjectPath) + ".exe";
+            string fullpath = BuildPath + "\\" + file;
+            Process proc = new Process();
+            proc.StartInfo.FileName = fullpath;
+            proc.StartInfo.WorkingDirectory = BuildPath;
+            proc.Start();
         }
     }
 }
