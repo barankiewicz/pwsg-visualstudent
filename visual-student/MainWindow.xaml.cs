@@ -170,6 +170,11 @@ namespace visual_student
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             OpenedFile file = ((sender as Button).DataContext) as OpenedFile;
+            if(file.Modified)
+            {
+                if (MessageBox.Show("This file has been modified. Do you want to save before closing?", "Save file?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    file.Save();
+            }
             OpenedFiles.Remove(file);
         }
 
