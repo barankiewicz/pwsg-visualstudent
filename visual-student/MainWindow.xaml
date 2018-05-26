@@ -123,10 +123,11 @@
                     <Separator />
                     <MenuItem Header="Exit" Click="MenuItem_Click_1" />
                 </MenuItem>
-                <MenuItem Header="Plugins" ItemsSource="{Binding Plugins}">
+                <MenuItem Header="Plugins" ItemsSource="{Binding PluginNames}" x:Name="pluginsMenuItem">
                     <MenuItem.ItemContainerStyle>
                         <Style>
-                            <Setter Property="MenuItem.Header" Value="DUperka" />
+                            <Setter Property="MenuItem.Header" Value="{Binding}" />
+                            <Setter Property="MenuItem.IsCheckable" Value="True" />
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>

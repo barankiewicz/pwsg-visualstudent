@@ -42,6 +42,7 @@ namespace visual_student
 
         private ObservableCollection<OpenedFile> _openedFiles;
         private ObservableCollection<IPlugin> _plugins;
+        private ObservableCollection<string> _pluginNames;
         private string _consoleMessages;
         private List<ErrorMessage> _errorMessages;
         private OpenedFile _selectedTab;
@@ -55,6 +56,7 @@ namespace visual_student
         public OpenedFile SelectedTab { get { return _selectedTab; } set { _selectedTab = value; OnPropertyChanged(); } }
         public int SelectedTabIndex { get { return _selectedTabIndex; } set { _selectedTabIndex = value; OnPropertyChanged(); } }
         public ObservableCollection<IPlugin> Plugins { get { return _plugins; } set { _plugins = value; OnPropertyChanged(); } }
+        public ObservableCollection<string> PluginNames { get { return _pluginNames; } set { _pluginNames = value; OnPropertyChanged(); } }
 
 
         public MainWindow()
@@ -64,6 +66,7 @@ namespace visual_student
             _openedFiles = new ObservableCollection<OpenedFile>();
             _errorMessages = new List<ErrorMessage>();
             _plugins = new ObservableCollection<IPlugin>();
+            _pluginNames = new ObservableCollection<string>();
             Load_Plugins();
 
             ProjectPath = "";
@@ -73,6 +76,7 @@ namespace visual_student
 
             openFiles.ItemsSource = OpenedFiles;
             errorListBox.ItemsSource = ErrorMesssages;
+            pluginsMenuItem.ItemsSource = PluginNames;
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -260,6 +264,7 @@ namespace visual_student
                         {
                             IPlugin myPlugin = Activator.CreateInstance(t) as IPlugin;
                             Plugins.Add(myPlugin);
+                            PluginNames.Add(t.Name);
                             break;
                         }
                     }
