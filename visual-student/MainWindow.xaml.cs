@@ -169,8 +169,8 @@ namespace visual_student
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //Close tab button
-            OpenedFiles.RemoveAt(0);
+            OpenedFile file = ((sender as Button).DataContext) as OpenedFile;
+            OpenedFiles.Remove(file);
         }
 
         private bool Build_Project()
