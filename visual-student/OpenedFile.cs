@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace visual_student
 {
@@ -24,6 +25,23 @@ namespace visual_student
             name = "New File";
             body = " ";
             path = "C:\\";
+        }
+
+        public void Save()
+        {
+            if(path=="")
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "C# Files (*cs) |*.cs";
+                sfd.CheckFileExists = true;
+                if (sfd.ShowDialog() == DialogResult.OK)
+                    this.path = sfd.FileName;
+            }
+
+            StreamWriter sw = new StreamWriter(new FileStream(path, FileMode.Create));
+            for (int i = 0; i < body.Length; i++)
+                sw.Write(body[i]);
+            sw.Close();
         }
 
         public static OpenedFile LoadFromFileStream(string path, string name)
