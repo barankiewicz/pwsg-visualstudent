@@ -109,6 +109,14 @@ namespace visual_student
             {
                 FileItem file = selectedItem as FileItem;
                 //Open new tab
+                for(int i = 0; i < OpenedFiles.Count; i++)
+                {
+                    if(file.Name == OpenedFiles[i].Name)
+                    {
+                        SelectedTabIndex = i;
+                        return;
+                    }
+                }
                 OpenedFile openedfile = OpenedFile.LoadFromFileStream(file.Path, file.Name);
                 OpenedFiles.Add(openedfile);
                 SelectedTabIndex = OpenedFiles.Count - 1;
