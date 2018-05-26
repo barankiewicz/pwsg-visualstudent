@@ -19,12 +19,6 @@
             <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Path}" />
         </DataTemplate>
 
-        <ControlTemplate x:Key="OpenedFileBodyTemplate">
-            <RichTextBox>
-                
-            </RichTextBox>
-        </ControlTemplate>
-
         <Style TargetType="TabItem" x:Key="AnimatedTabItem">
             <Setter Property="LayoutTransform">
                 <Setter.Value>
@@ -139,12 +133,14 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
             <ComboBox Grid.Column="0" Margin ="0 0 " SelectedIndex="0" VerticalAlignment="Center" x:Name="chooseComboBox">
                 <ComboBoxItem Content="Build"/>
                 <ComboBoxItem Content="Build + Run"/>
             </ComboBox>
             <Button Grid.Column="1" Margin="6 6" Content="Execute" Command="Select"/>
+            <Button Grid.Column="2" Margin="6 6" Content="test" Click="Button_Click_1" />
         </Grid>
 
         <Grid Grid.Row="2">

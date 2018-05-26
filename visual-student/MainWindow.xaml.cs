@@ -270,5 +270,9 @@ namespace visual_student
                     }
                 }
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+        }
     }
 }
