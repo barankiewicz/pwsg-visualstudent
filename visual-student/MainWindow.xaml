@@ -49,6 +49,8 @@
                 </EventTrigger>
             </Style.Triggers>
         </Style>
+        
+        
 
         <DataTemplate x:Key="errorMessageTemplate">
             <Grid HorizontalAlignment="Stretch">
@@ -62,7 +64,20 @@
                 <TextBlock Grid.Column="2" Text="{Binding Line, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Margin="7 0"/>
             </Grid>
         </DataTemplate>
-        
+
+        <DataTemplate x:Key="HeaderTemplate" DataType="TabItem.Header">
+            <Grid x:Name="MainGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="3"/>
+                    <ColumnDefinition Width="25"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Name, diag:PresentationTraceSources.TraceLevel=High}" x:Name="HeaderName" VerticalAlignment="Center"/>
+                <!--Visibility="{Binding Modified, Mode=TwoWay, Converter={StaticResource boolToVisibilityConverter}}"-->
+                <TextBlock Grid.Column="1" Text="*" Visibility="Visible" x:Name="HeaderModified" VerticalAlignment="Center"/>
+                <Button Grid.Column="2" Content="X" VerticalAlignment="Center" Margin="3 0" Click="Button_Click" />
+            </Grid>
+        </DataTemplate>
 
         <Style x:Key="errorListBoxStyle" TargetType="{x:Type ListBoxItem}">
             <Setter Property="Foreground" Value="Black"/>
@@ -155,36 +170,7 @@
                     <RowDefinition Height="5*"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-                <!--SelectedItem="{Binding SelectedTab, Mode=TwoWay}"-->
-                <TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles}" SelectedIndex="{Binding SelectedTabIndex}" SelectedItem="{Binding SelectedTab}" >
-                    <TabControl.ItemTemplate>
-                         <!--this is the header template-->
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="3"/>
-                                    <ColumnDefinition Width="25"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Text="*" Visibility="{Binding Modified, Mode=TwoWay, Converter={StaticResource boolToVisibilityConverter}}" VerticalAlignment="Center"/>
-                                <Button Grid.Column="2" Content="X" VerticalAlignment="Center" Margin="3 0" Click="Button_Click" />
-                            </Grid>
-                        </DataTemplate>
-                    </TabControl.ItemTemplate>
-                    <TabControl.ContentTemplate>
-                        <DataTemplate>
-                            <!--PreviewKeyDown="RichTextBox_PreviewKeyDown" PreviewTextInput="RichTextBox_PreviewTextInput"-->
-                            <RichTextBox VerticalScrollBarVisibility="Visible">
-                                <FlowDocument FontSize="12" FontFamily="Monaco">
-                                    <Paragraph Margin="0">
-                                        <Run Text="{Binding Body, Mode=TwoWay, diag:PresentationTraceSources.TraceLevel=High, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}"/>
-                                    </Paragraph>
-                                </FlowDocument>
-                            </RichTextBox>
-                        </DataTemplate>
-                    </TabControl.ContentTemplate>
-                </TabControl>
+                <TabControl Grid.Row="0" x:Name="openFiles" SelectedIndex="{Binding SelectedTabIndex}"/>
                 <TabControl Grid.Row="1" x:Name="consoleControl" Margin="0 3" TabStripPlacement="Bottom" ItemContainerStyle="{StaticResource AnimatedTabItem}">
                     <TabItem Header="Output" Foreground="DarkBlue" x:Name="ConsoleMessagesTabItem">
                         <TextBox Text="{Binding ConsoleMessages}" x:Name="ConsoleMessagesTextBlock" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" TextWrapping="Wrap"/>

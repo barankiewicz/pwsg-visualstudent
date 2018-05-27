@@ -58,10 +58,11 @@ namespace visual_student
         public ObservableCollection<IPlugin> Plugins { get { return _plugins; } set { _plugins = value; OnPropertyChanged(); } }
         public ObservableCollection<string> PluginNames { get { return _pluginNames; } set { _pluginNames = value; OnPropertyChanged(); } }
 
+        public object ViewModel { get; private set; }
 
         public MainWindow()
         {
-            //DataContext = this;
+            DataContext = this;
             InitializeComponent();
             _openedFiles = new ObservableCollection<OpenedFile>();
             _errorMessages = new List<ErrorMessage>();
@@ -74,7 +75,7 @@ namespace visual_student
             _selectedTab = null;
             _selectedTabIndex = 0;
 
-            openFiles.ItemsSource = OpenedFiles;
+            //openFiles.ItemsSource = OpenedFiles;
             errorListBox.ItemsSource = ErrorMesssages;
             pluginsMenuItem.ItemsSource = PluginNames;
         }
@@ -141,7 +142,8 @@ namespace visual_student
             {
                 OpenedFile file = OpenedFile.LoadFromFileStream(opf.FileName, opf.SafeFileName);
                 OpenedFiles.Add(file);
-                //SelectedTabIndex = OpenedFiles.Count - 1;
+                AddMenuItem(file, OpenedFiles.Count - 1);
+                SelectedTabIndex = OpenedFiles.Count - 1;
             }
         }
         private void SaveCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -331,5 +333,71 @@ namespace visual_student
                 OpenedFiles[SelectedTabIndex].Modified = true;
             }
         }
+
+        private void AddMenuItem(OpenedFile file, int index)
+        {
+            TabItem tabItem = new TabItem();
+            DataTemplate dataTemplate = (DataTemplate)FindResource("HeaderTemplate");
+            var res = dataTemplate.Resources;
+            var does = res.Contains("MainGrid");
+            tabItem.HeaderTemplate = (DataTemplate)FindResource("HeaderTemplate");
+            tabItem.DataContext = OpenedFiles[index];
+
+            MessageBox.Show(VisualTreeHelper.GetChildrenCount(tabItem).ToString());
+            //DataTemplateSelector templateSelector = new DataTemplateSelector();
+            //templateSelector.
+
+            Paragraph paragraph = new Paragraph();
+            Run run = new Run();
+
+            //tabItem.He
+            //TextBlock header = (TextBlock)tabItem.FindName("MainGrid");
+
+            //Binding headerBinding = new Binding("Name");
+            ////PresentationTraceSources.SetTraceLevel(headerBinding, PresentationTraceLevel.High);
+            //headerBinding.Source = OpenedFiles[index];
+            //headerBinding.Mode = BindingMode.TwoWay;
+            //headerBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            //tabItem.SetBinding(TabItem.HeaderProperty, headerBinding);
+
+            Binding bodyBinding = new Binding("Body");
+            //PresentationTraceSources.SetTraceLevel(bodyBinding, PresentationTraceLevel.High);
+            bodyBinding.Source = OpenedFiles[index];
+            bodyBinding.Mode = BindingMode.TwoWay;
+            bodyBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            run.SetBinding(Run.TextProperty, bodyBinding);
+
+            paragraph.Inlines.Add(run);
+            FlowDocument flowDocument = new FlowDocument(paragraph);
+            RichTextBox rtb = new RichTextBox(flowDocument);
+
+            tabItem.Content = rtb;
+            openFiles.Items.Add(tabItem);
+            foreach (var textblock in FindVisualChildren<Grid>(this))
+            {
+                if (textblock.Name == "MainGrid")
+                {
+                    /*   Your code here  */
+                }
+            }
+        }
+
+        public IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+
+                    if (child != null && child is T)
+                        yield return (T)child;
+
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                        yield return childOfChild;
+                }
+            }
+        }
     }
+
 }
