@@ -61,7 +61,7 @@ namespace visual_student
 
         public MainWindow()
         {
-            DataContext = this;
+            //DataContext = this;
             InitializeComponent();
             _openedFiles = new ObservableCollection<OpenedFile>();
             _errorMessages = new List<ErrorMessage>();
@@ -141,7 +141,7 @@ namespace visual_student
             {
                 OpenedFile file = OpenedFile.LoadFromFileStream(opf.FileName, opf.SafeFileName);
                 OpenedFiles.Add(file);
-                SelectedTabIndex = OpenedFiles.Count - 1;
+                //SelectedTabIndex = OpenedFiles.Count - 1;
             }
         }
         private void SaveCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -245,8 +245,28 @@ namespace visual_student
 
         private void RichTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            if(SelectedTab != null)
-                SelectedTab.Modified = true;
+            RichTextBox Rtb = (RichTextBox)sender;
+            /* text to insert */
+            string text = e.Text;
+
+            /* get start pointer */
+            TextPointer startPtr = Rtb.Document.ContentStart;
+
+            /* get current caret position */
+            int start = startPtr.GetOffsetToPosition(Rtb.CaretPosition);
+
+            /* insert text */
+            Rtb.CaretPosition.InsertTextInRun(text);
+
+            /* update caret position */
+            Rtb.CaretPosition = startPtr.GetPositionAtOffset((start) + text.Length);
+
+            /* update focus */
+            Rtb.Focus();
+            e.Handled = true;
+            OpenedFiles[SelectedTabIndex].Modified = true;
+            //if (OpenedFiles[SelectedTabIndex] != null && !OpenedFiles[SelectedTabIndex].Modified)
+            //    OpenedFiles[SelectedTabIndex].Modified = true;
         }
 
         private void Load_Plugins()
@@ -273,6 +293,43 @@ namespace visual_student
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+        }
+
+        private void Run_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void Paragraph_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void RichTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            RichTextBox Rtb = (RichTextBox)sender;
+            if (e.Key == Key.Enter)
+            {
+                /* text to insert */
+                string text = "\n";
+
+                /* get start pointer */
+                TextPointer startPtr = Rtb.Document.ContentStart;
+
+                /* get current caret position */
+                int start = startPtr.GetOffsetToPosition(Rtb.CaretPosition);
+
+                /* insert text */
+                Rtb.CaretPosition.InsertTextInRun(text);
+
+                /* update caret position */
+                Rtb.CaretPosition = startPtr.GetPositionAtOffset((start) + text.Length);
+
+                /* update focus */
+                Rtb.Focus();
+                e.Handled = true;
+                OpenedFiles[SelectedTabIndex].Modified = true;
+            }
         }
     }
 }

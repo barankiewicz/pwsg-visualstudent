@@ -69,6 +69,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DebugTraceListener.cs" />
     <Compile Include="EnumConverter.cs" />
     <Compile Include="ErrorMessage.cs" />
     <Compile Include="OpenedFile.cs" />

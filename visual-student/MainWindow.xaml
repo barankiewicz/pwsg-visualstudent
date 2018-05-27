@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:visual_student"
+        xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         mc:Ignorable="d"
         Title="Visual Student" Height="600" Width="800" MinWidth="500" MinHeight="500" WindowStartupLocation="CenterScreen">
 
@@ -154,7 +155,8 @@
                     <RowDefinition Height="5*"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-                <TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}" SelectedItem="{Binding SelectedTab, Mode=TwoWay}">
+                <!--SelectedItem="{Binding SelectedTab, Mode=TwoWay}"-->
+                <TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles}" SelectedIndex="{Binding SelectedTabIndex}" SelectedItem="{Binding SelectedTab}" >
                     <TabControl.ItemTemplate>
                          <!--this is the header template-->
                         <DataTemplate>
@@ -164,18 +166,19 @@
                                     <ColumnDefinition Width="3"/>
                                     <ColumnDefinition Width="25"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Text="*" Visibility="{Binding Modified, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource boolToVisibilityConverter}}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Text="*" Visibility="{Binding Modified, Mode=TwoWay, Converter={StaticResource boolToVisibilityConverter}}" VerticalAlignment="Center"/>
                                 <Button Grid.Column="2" Content="X" VerticalAlignment="Center" Margin="3 0" Click="Button_Click" />
                             </Grid>
                         </DataTemplate>
                     </TabControl.ItemTemplate>
                     <TabControl.ContentTemplate>
                         <DataTemplate>
-                            <RichTextBox VerticalScrollBarVisibility="Auto" PreviewTextInput="RichTextBox_PreviewTextInput">
+                            <!--PreviewKeyDown="RichTextBox_PreviewKeyDown" PreviewTextInput="RichTextBox_PreviewTextInput"-->
+                            <RichTextBox VerticalScrollBarVisibility="Visible">
                                 <FlowDocument FontSize="12" FontFamily="Monaco">
                                     <Paragraph Margin="0">
-                                        <Run Text="{Binding Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Run Text="{Binding Body, Mode=TwoWay, diag:PresentationTraceSources.TraceLevel=High, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Paragraph>
                                 </FlowDocument>
                             </RichTextBox>

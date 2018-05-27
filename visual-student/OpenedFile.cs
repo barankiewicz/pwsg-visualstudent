@@ -11,29 +11,51 @@ using System.Windows;
 
 namespace visual_student
 {
-    public class OpenedFile : INotifyPropertyChanged
+    //public class OpenedFile : INotifyPropertyChanged
+    public class OpenedFile
     {
-        //Implementation of INotifyPropertyChanged interface 
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        ////Implementation of INotifyPropertyChanged interface 
+        //public event PropertyChangedEventHandler PropertyChanged;
+        //private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        //{
+        //    if (PropertyChanged != null)
+        //    {
+        //        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        //    }
+        //}
 
         private string _name;
         private string _body;
+        private string _prevbody;
         private string _path;
         private bool _modified;
 
-        public string Name { get { return _name; } set { _name = value; OnPropertyChanged(); } }
-        public string Body { get { return _body; } set { _body = value; OnPropertyChanged(); } }
-        public string Path { get { return _path; } set { _path = value; OnPropertyChanged(); } }
-        public bool Modified { get { return _modified; } set { _modified = value; OnPropertyChanged(); } }
+        public string Name { get { return _name; } set { _name = value;
+                //NotifyPropertyChanged();
+            } }
+        public string Body {
+            get { return _body; }
+            set {
+                if (_prevbody != value)
+                {
+                    _prevbody = _body;
+                    _body = value;
+                   // NotifyPropertyChanged();
+                }
+            }
+        }
+        public string Path { get { return _path; } set { _path = value;
+                //NotifyPropertyChanged();
+            } }
+        public bool Modified { get { return _modified; } set { _modified = value;
+               // NotifyPropertyChanged();
+            } }
         public OpenedFile(string name, string body, string path)
         {
             Name = name;
             Body = body;
             Path = path;
+            _prevbody = "";
             Modified = false;
         }
 
@@ -42,6 +64,7 @@ namespace visual_student
             Name = "New File";
             Body = "";
             Path = "";
+            _prevbody = "";
             Modified = true;
         }
 
@@ -66,8 +89,7 @@ namespace visual_student
             {
                 FileStream fs = new FileStream(Path, FileMode.Create, FileAccess.Write);
                 StreamWriter sw = new StreamWriter(fs);
-                for (int i = 0; i < Body.Length; i++)
-                    sw.Write(Body[i]);
+                sw.Write(Body);
                 sw.Close();
                 Modified = false;
             } catch (UnauthorizedAccessException e)
@@ -113,7 +135,6 @@ namespace visual_student
             while (!sr.EndOfStream)
             {
                 sb.Append(sr.ReadLine());
-                sb.Append("\n");
             }
             sr.Close();
             return new OpenedFile(name, sb.ToString(), path);
