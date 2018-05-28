@@ -45,15 +45,13 @@ namespace visual_student
         private ObservableCollection<string> _pluginNames;
         private string _consoleMessages;
         private List<ErrorMessage> _errorMessages;
-        private OpenedFile _selectedTab;
         private string ProjectPath;
         private string BuildPath;
         private int _selectedTabIndex;
 
         public ObservableCollection<OpenedFile> OpenedFiles { get { return _openedFiles; } set { _openedFiles = value; OnPropertyChanged(); } }
         public string ConsoleMessages{ get { return _consoleMessages; } set { _consoleMessages = value; OnPropertyChanged(); } }
-        public List<ErrorMessage> ErrorMesssages { get { return _errorMessages; } set { _errorMessages = value; OnPropertyChanged(); } }
-        public OpenedFile SelectedTab { get { return _selectedTab; } set { _selectedTab = value; OnPropertyChanged(); } }
+        public List<ErrorMessage> ErrorMessages { get { return _errorMessages; } set { _errorMessages = value; OnPropertyChanged(); } }
         public int SelectedTabIndex { get { return _selectedTabIndex; } set { _selectedTabIndex = value; OnPropertyChanged(); } }
         public ObservableCollection<IPlugin> Plugins { get { return _plugins; } set { _plugins = value; OnPropertyChanged(); } }
         public ObservableCollection<string> PluginNames { get { return _pluginNames; } set { _pluginNames = value; OnPropertyChanged(); } }
@@ -68,17 +66,14 @@ namespace visual_student
             _errorMessages = new List<ErrorMessage>();
             _plugins = new ObservableCollection<IPlugin>();
             _pluginNames = new ObservableCollection<string>();
+
+            errorListBox.ItemsSource = ErrorMessages;
+            pluginsMenuItem.ItemsSource = PluginNames;
             Load_Plugins();
 
             ProjectPath = "";
             _consoleMessages = "";
-            _selectedTab = null;
             _selectedTabIndex = 0;
-
-            //openFiles.ItemsSource = OpenedFiles;
-            errorListBox.ItemsSource = ErrorMesssages;
-            pluginsMenuItem.ItemsSource = PluginNames;
-            
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -184,13 +179,7 @@ namespace visual_student
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            OpenedFile file = ((sender as Button).DataContext) as OpenedFile;
-            if(file.Modified)
-            {
-                if (MessageBox.Show("This file has been modified. Do you want to save before closing?", "Save file?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                    file.Save();
-            }
-            OpenedFiles.Remove(file);
+            openFiles.Items.Remove(((ContentPresenter)((Button)sender).TemplatedParent).TemplatedParent);
         }
 
         private bool Build_Project()
@@ -201,7 +190,7 @@ namespace visual_student
             if(Directory.Exists(BuildPath))
                 Directory.Delete(BuildPath, true);
 
-            ErrorMesssages.Clear();
+            ErrorMessages.Clear();
             var props = new Dictionary<string, string>
             {
                 {"OutputPath", BuildPath}
@@ -216,7 +205,7 @@ namespace visual_student
                 var divided = x.Split(new char[] { ' ', ':' }, 4, StringSplitOptions.RemoveEmptyEntries);
                 var couldBeError = divided.Length > 1 ? true : false;
                 if (couldBeError && divided[1] == "error")
-                    ErrorMesssages.Add(new ErrorMessage(divided[0], "error " + divided[2], divided[3]));
+                    ErrorMessages.Add(new ErrorMessage(divided[0], "error " + divided[2], divided[3]));
                     
             };
             var logger = new ConsoleLogger(LoggerVerbosity.Normal, handler, null, null);
@@ -232,7 +221,7 @@ namespace visual_student
 
             var res = BuildManager.DefaultBuildManager.Build(buildParams, reqData);
             ConsoleMessages = sb.ToString();
-
+            errorListBox.Items.Refresh();
             if (res.OverallResult == BuildResultCode.Failure)
                 return false;
             return true;
