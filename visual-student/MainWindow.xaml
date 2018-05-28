@@ -143,6 +143,12 @@
                             <Setter Property="MenuItem.IsCheckable" Value="True" />
                         </Style>
                     </MenuItem.ItemContainerStyle>
+                    <MenuItem.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" PreviewMouseDown="TextBlock_MouseDown">
+                            </TextBlock>
+                        </DataTemplate>
+                    </MenuItem.ItemTemplate>
                 </MenuItem>
                 <MenuItem Header="About" Click="MenuItem_Click"/>
             </Menu>
@@ -159,7 +165,6 @@
                 <ComboBoxItem Content="Build + Run"/>
             </ComboBox>
             <Button Grid.Column="1" Margin="6 6" Content="Execute" Command="Select"/>
-            <Button Grid.Column="2" Margin="6 6" Content="test" Click="Button_Click_1" />
         </Grid>
 
         <Grid Grid.Row="2">
