@@ -72,7 +72,8 @@
                     <ColumnDefinition Width="3"/>
                     <ColumnDefinition Width="25"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding Name, diag:PresentationTraceSources.TraceLevel=High}" x:Name="HeaderName" VerticalAlignment="Center"/>
+                <!--, diag:PresentationTraceSources.TraceLevel=High-->
+                <TextBlock Grid.Column="0" Text="{Binding Name}" x:Name="HeaderName" VerticalAlignment="Center"/>
                 <!--Visibility="{Binding Modified, Mode=TwoWay, Converter={StaticResource boolToVisibilityConverter}}"-->
                 <TextBlock Grid.Column="1" Text="*" Visibility="Visible" x:Name="HeaderModified" VerticalAlignment="Center"/>
                 <Button Grid.Column="2" Content="X" VerticalAlignment="Center" Margin="3 0" Click="Button_Click" />
@@ -182,7 +183,7 @@
                 </TabControl>
             </Grid>
 
-            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" ShowsPreview="True"/>
             <TreeView Grid.Column="2" x:Name="fileTree" ItemsSource="{Binding}" MouseDoubleClick="fileTree_MouseDoubleClick"/>
         </Grid>
 

@@ -78,6 +78,7 @@ namespace visual_student
             //openFiles.ItemsSource = OpenedFiles;
             errorListBox.ItemsSource = ErrorMesssages;
             pluginsMenuItem.ItemsSource = PluginNames;
+            
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -130,6 +131,7 @@ namespace visual_student
                 }
                 OpenedFile openedfile = OpenedFile.LoadFromFileStream(file.Path, file.Name);
                 OpenedFiles.Add(openedfile);
+                AddMenuItem(openedfile, OpenedFiles.Count - 1);
                 SelectedTabIndex = OpenedFiles.Count - 1;
             }
         }
@@ -149,21 +151,22 @@ namespace visual_student
         private void SaveCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             //Implementation of save
-            if(SelectedTab != null)
-                SelectedTab.Save();
+            if(OpenedFiles[SelectedTabIndex] != null)
+                OpenedFiles[SelectedTabIndex].Save();
         }
 
         private void saveAsButton_Click(object sender, RoutedEventArgs e)
         {
             //Implementation of saveAs
-            if (SelectedTab != null)
-                SelectedTab.SaveAs();
+            if (OpenedFiles[SelectedTabIndex] != null)
+                OpenedFiles[SelectedTabIndex].SaveAs();
         }
         private void NewCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             //New file button
             OpenedFile file = new OpenedFile();
             OpenedFiles.Add(file);
+            AddMenuItem(file, OpenedFiles.Count - 1);
             SelectedTabIndex = OpenedFiles.Count - 1;
         }
         private void ExecuteCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -245,32 +248,6 @@ namespace visual_student
             proc.Start();
         }
 
-        private void RichTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            RichTextBox Rtb = (RichTextBox)sender;
-            /* text to insert */
-            string text = e.Text;
-
-            /* get start pointer */
-            TextPointer startPtr = Rtb.Document.ContentStart;
-
-            /* get current caret position */
-            int start = startPtr.GetOffsetToPosition(Rtb.CaretPosition);
-
-            /* insert text */
-            Rtb.CaretPosition.InsertTextInRun(text);
-
-            /* update caret position */
-            Rtb.CaretPosition = startPtr.GetPositionAtOffset((start) + text.Length);
-
-            /* update focus */
-            Rtb.Focus();
-            e.Handled = true;
-            OpenedFiles[SelectedTabIndex].Modified = true;
-            //if (OpenedFiles[SelectedTabIndex] != null && !OpenedFiles[SelectedTabIndex].Modified)
-            //    OpenedFiles[SelectedTabIndex].Modified = true;
-        }
-
         private void Load_Plugins()
         {
             var files = Directory.EnumerateFiles(System.AppDomain.CurrentDomain.BaseDirectory);
@@ -297,43 +274,6 @@ namespace visual_student
         {
         }
 
-        private void Run_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void Paragraph_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void RichTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            RichTextBox Rtb = (RichTextBox)sender;
-            if (e.Key == Key.Enter)
-            {
-                /* text to insert */
-                string text = "\n";
-
-                /* get start pointer */
-                TextPointer startPtr = Rtb.Document.ContentStart;
-
-                /* get current caret position */
-                int start = startPtr.GetOffsetToPosition(Rtb.CaretPosition);
-
-                /* insert text */
-                Rtb.CaretPosition.InsertTextInRun(text);
-
-                /* update caret position */
-                Rtb.CaretPosition = startPtr.GetPositionAtOffset((start) + text.Length);
-
-                /* update focus */
-                Rtb.Focus();
-                e.Handled = true;
-                OpenedFiles[SelectedTabIndex].Modified = true;
-            }
-        }
-
         private void AddMenuItem(OpenedFile file, int index)
         {
             TabItem tabItem = new TabItem();
@@ -342,14 +282,8 @@ namespace visual_student
             var does = res.Contains("MainGrid");
             tabItem.HeaderTemplate = (DataTemplate)FindResource("HeaderTemplate");
             tabItem.DataContext = OpenedFiles[index];
-
-            MessageBox.Show(VisualTreeHelper.GetChildrenCount(tabItem).ToString());
             //DataTemplateSelector templateSelector = new DataTemplateSelector();
             //templateSelector.
-
-            Paragraph paragraph = new Paragraph();
-            Run run = new Run();
-
             //tabItem.He
             //TextBlock header = (TextBlock)tabItem.FindName("MainGrid");
 
@@ -360,26 +294,28 @@ namespace visual_student
             //headerBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             //tabItem.SetBinding(TabItem.HeaderProperty, headerBinding);
 
-            Binding bodyBinding = new Binding("Body");
-            //PresentationTraceSources.SetTraceLevel(bodyBinding, PresentationTraceLevel.High);
-            bodyBinding.Source = OpenedFiles[index];
-            bodyBinding.Mode = BindingMode.TwoWay;
-            bodyBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            run.SetBinding(Run.TextProperty, bodyBinding);
+            Paragraph paragraph = new Paragraph();
+            Run run = new Run();
+            run.Text = OpenedFiles[index].Body;
 
+            paragraph.Margin = new Thickness(0);
+            paragraph.FontFamily = new FontFamily("Monaco");
+            paragraph.FontSize = 12;
             paragraph.Inlines.Add(run);
             FlowDocument flowDocument = new FlowDocument(paragraph);
+
             RichTextBox rtb = new RichTextBox(flowDocument);
+            rtb.TextChanged += Rtb_TextChanged;
 
             tabItem.Content = rtb;
             openFiles.Items.Add(tabItem);
-            foreach (var textblock in FindVisualChildren<Grid>(this))
-            {
-                if (textblock.Name == "MainGrid")
-                {
-                    /*   Your code here  */
-                }
-            }
+        }
+
+        private void Rtb_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            RichTextBox richTextBox = (RichTextBox)sender;
+            TextRange range = new TextRange(richTextBox.Document.ContentStart, richTextBox.Document.ContentEnd);
+            OpenedFiles[SelectedTabIndex].Body = range.Text;
         }
 
         public IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
