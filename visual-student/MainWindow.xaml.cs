@@ -55,6 +55,7 @@ namespace visual_student
         public int SelectedTabIndex { get { return _selectedTabIndex; } set { _selectedTabIndex = value; OnPropertyChanged(); } }
         public ObservableCollection<IPlugin> Plugins { get { return _plugins; } set { _plugins = value; OnPropertyChanged(); } }
         public ObservableCollection<string> PluginNames { get { return _pluginNames; } set { _pluginNames = value; OnPropertyChanged(); } }
+        public List<Item> OpenedProjects;
 
         public object ViewModel { get; private set; }
 
@@ -66,6 +67,7 @@ namespace visual_student
             _errorMessages = new List<ErrorMessage>();
             _plugins = new ObservableCollection<IPlugin>();
             _pluginNames = new ObservableCollection<string>();
+            OpenedProjects = new List<Item>();
 
             errorListBox.ItemsSource = ErrorMessages;
             pluginsMenuItem.ItemsSource = PluginNames;
@@ -96,14 +98,10 @@ namespace visual_student
             fbd.SelectedPath = "X:\\Programming\\C#\\testapp\\testapp";
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                for(int i = 0; i < openFiles.Items.Count; i++)
-                {
-                    OpenedFiles.RemoveAt(i);
-                }
-                string mainPath = fbd.SelectedPath;
-                var itemProvider = new ItemProvider();
-                var items = itemProvider.GetItems(fbd.SelectedPath, out ProjectPath);
-                fileTree.DataContext = items;
+                ItemProvider prov = new ItemProvider();
+                List<Item> tmp = prov.GetItems(fbd.SelectedPath, out ProjectPath);
+                OpenedProjects.Add(tmp[0]);
+                fileTree.DataContext = OpenedProjects;
                 fileTree.Items.Refresh();
             }
         }
@@ -272,43 +270,6 @@ namespace visual_student
             }
         }
 
-        private void AddMenuItem(OpenedFile file, int index)
-        {
-            TabItem tabItem = new TabItem();
-            DataTemplate dataTemplate = (DataTemplate)FindResource("HeaderTemplate");
-            tabItem.Header = dataTemplate.LoadContent();
-            //tabItem.DataContext = OpenedFiles[index];
-            //DataTemplateSelector templateSelector = new DataTemplateSelector();
-            //templateSelector.
-            //tabItem.He
-            //TextBlock header = (TextBlock)tabItem.FindName("MainGrid");
-
-            //Binding headerBinding = new Binding("Name");
-            ////PresentationTraceSources.SetTraceLevel(headerBinding, PresentationTraceLevel.High);
-            //headerBinding.Source = OpenedFiles[index];
-            //headerBinding.Mode = BindingMode.TwoWay;
-            //headerBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            //tabItem.SetBinding(TabItem.HeaderProperty, headerBinding);
-
-            Paragraph paragraph = new Paragraph();
-            Run run = new Run();
-            run.Text = OpenedFiles[index].Body;
-
-            paragraph.Margin = new Thickness(0);
-            paragraph.FontFamily = new FontFamily("Monaco");
-            paragraph.FontSize = 12;
-            paragraph.Inlines.Add(run);
-            FlowDocument flowDocument = new FlowDocument(paragraph);
-
-            RichTextBox rtb = new RichTextBox(flowDocument);
-            rtb.TextChanged += Rtb_TextChanged;
-
-            tabItem.Content = rtb;
-            tabItem.DataContext = OpenedFiles[index];
-            openFiles.Items.Add(tabItem);
-
-        }
-
         private void Rtb_TextChanged(object sender, TextChangedEventArgs e)
         {
             RichTextBox richTextBox = (RichTextBox)sender;
@@ -366,6 +327,11 @@ namespace visual_student
             FlowDocument flowDocument = new FlowDocument(paragraph);
             rtb.Document = flowDocument;
 
+        }
+
+        private void fileTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            MessageBox.Show(fileTree.SelectedValuePath);
         }
     }
 

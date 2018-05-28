@@ -75,7 +75,7 @@
                     <ColumnDefinition Width="25"/>
                 </Grid.ColumnDefinitions>
                 <!--, diag:PresentationTraceSources.TraceLevel=High-->
-                <TextBlock Grid.Column="0" Text="{Binding Name , diag:PresentationTraceSources.TraceLevel=High}" x:Name="HeaderName" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="0" Text="{Binding Name}" x:Name="HeaderName" VerticalAlignment="Center"/>
                 <!--Visibility="{Binding Modified, Mode=TwoWay, Converter={StaticResource boolToVisibilityConverter}}"-->
                 <TextBlock Grid.Column="1" Text="*" Visibility="{Binding Modified, Mode=TwoWay, Converter={StaticResource boolToVisibilityConverter}}" x:Name="HeaderModified" VerticalAlignment="Center" />
                 <Button Grid.Column="2" Content="X" VerticalAlignment="Center" Margin="3 0" Click="Button_Click" />

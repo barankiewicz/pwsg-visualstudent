@@ -46,7 +46,9 @@ namespace visual_student
         public List<Item> GetItems(string path, out string csProjPath)
         {
             csProjPath = "";
+            string str = "";
             var items = new List<Item>();
+            List<Item> ret = new List<Item>();
 
             var dirInfo = new DirectoryInfo(path);
             bool isCsProj = false;
@@ -66,6 +68,7 @@ namespace visual_student
                 {
                     isCsProj = true;
                     csProjPath = file.FullName;
+                    str = file.Name;
                 }
                     
             }
@@ -88,7 +91,10 @@ namespace visual_student
                 items.Add(item);
             }
 
-            return items;
+            List<Item> p = new List<Item>();
+            p.Add(new DirectoryItem("Project: " + System.IO.Path.GetFileNameWithoutExtension(str), csProjPath, items));
+            return p;
         }
+
     }
 }
