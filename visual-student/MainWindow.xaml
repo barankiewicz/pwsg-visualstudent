@@ -75,9 +75,9 @@
                     <ColumnDefinition Width="25"/>
                 </Grid.ColumnDefinitions>
                 <!--, diag:PresentationTraceSources.TraceLevel=High-->
-                <TextBlock Grid.Column="0" Text="{Binding Name}" x:Name="HeaderName" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="0" Text="{Binding Name , diag:PresentationTraceSources.TraceLevel=High}" x:Name="HeaderName" VerticalAlignment="Center"/>
                 <!--Visibility="{Binding Modified, Mode=TwoWay, Converter={StaticResource boolToVisibilityConverter}}"-->
-                <TextBlock Grid.Column="1" Text="*" x:Name="HeaderModified" VerticalAlignment="Center" Visibility="{Binding Modified, Mode=TwoWay, Converter={StaticResource boolToVisibilityConverter}}" />
+                <TextBlock Grid.Column="1" Text="*" Visibility="{Binding Modified, Mode=TwoWay, Converter={StaticResource boolToVisibilityConverter}}" x:Name="HeaderModified" VerticalAlignment="Center" />
                 <Button Grid.Column="2" Content="X" VerticalAlignment="Center" Margin="3 0" Click="Button_Click" />
             </Grid>
         </DataTemplate>
@@ -173,13 +173,14 @@
                     <RowDefinition Height="5*"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-                <TabControl Grid.Row="0" x:Name="openFiles" ItemsSource="{Binding OpenedFiles}" SelectedIndex="{Binding SelectedTabIndex}" ContentTemplate="{StaticResource RichTextBoxTemplate}">
-                    <TabControl.ItemContainerStyle>
+                <TabControl Grid.Row="0" x:Name="openFiles" SelectedIndex="{Binding SelectedTabIndex}" ItemsSource="{Binding OpenedFiles}" ItemTemplate="{StaticResource HeaderTemplate}">
+                    <TabControl.Resources>
                         <Style TargetType="TabItem">
-                            <Setter Property="HeaderTemplate" Value="{StaticResource HeaderTemplate}" />
+                            <EventSetter Event="Loaded" Handler="TabItem_Loaded" />
                         </Style>
-                    </TabControl.ItemContainerStyle>
+                    </TabControl.Resources>
                 </TabControl>
+
                 <TabControl Grid.Row="1" x:Name="consoleControl" Margin="0 3" TabStripPlacement="Bottom" ItemContainerStyle="{StaticResource AnimatedTabItem}">
                     <TabItem Header="Output" Foreground="DarkBlue" x:Name="ConsoleMessagesTabItem">
                         <TextBox Text="{Binding ConsoleMessages}" x:Name="ConsoleMessagesTextBlock" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" TextWrapping="Wrap"/>

@@ -265,16 +265,19 @@ namespace visual_student
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            foreach(TabItem t in openFiles.Items)
+            {
+                RichTextBox rtb = (RichTextBox)t.Content;
+                Plugins[0].Do(rtb);
+            }
         }
 
         private void AddMenuItem(OpenedFile file, int index)
         {
             TabItem tabItem = new TabItem();
             DataTemplate dataTemplate = (DataTemplate)FindResource("HeaderTemplate");
-            var res = dataTemplate.Resources;
-            var does = res.Contains("MainGrid");
-            tabItem.HeaderTemplate = (DataTemplate)FindResource("HeaderTemplate");
-            tabItem.DataContext = OpenedFiles[index];
+            tabItem.Header = dataTemplate.LoadContent();
+            //tabItem.DataContext = OpenedFiles[index];
             //DataTemplateSelector templateSelector = new DataTemplateSelector();
             //templateSelector.
             //tabItem.He
@@ -301,35 +304,68 @@ namespace visual_student
             rtb.TextChanged += Rtb_TextChanged;
 
             tabItem.Content = rtb;
+            tabItem.DataContext = OpenedFiles[index];
             openFiles.Items.Add(tabItem);
+
         }
 
         private void Rtb_TextChanged(object sender, TextChangedEventArgs e)
         {
             RichTextBox richTextBox = (RichTextBox)sender;
             TextRange range = new TextRange(richTextBox.Document.ContentStart, richTextBox.Document.ContentEnd);
-
-            if(range.Text != OpenedFiles[SelectedTabIndex].Body)
-                OpenedFiles[SelectedTabIndex].Modified = true;
-
+            string prev = range.Text;
+            string body = OpenedFiles[SelectedTabIndex].Body;
             OpenedFiles[SelectedTabIndex].Body = range.Text;
-            
+
+            if (prev.Substring(0, body.Length) != body)
+                OpenedFiles[SelectedTabIndex].Modified = true;
+        }
+
+        private void TabItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            var tabItem = (sender as TabItem);
+
+            if (null != tabItem.DataContext)
+            {
+                //  Hey, what about TabControl.ItemTemplate, eh? 
+                var dataTemplate = (DataTemplate)tabItem.FindResource("RichTextBoxTemplate");
+
+                tabItem.Content = dataTemplate.LoadContent();
+                (tabItem.Content as FrameworkElement).DataContext = tabItem.DataContext;
+            }
+        }
+
+        public IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+
+                    if (child != null && child is T)
+                        yield return (T)child;
+
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                        yield return childOfChild;
+                }
+            }
         }
 
         private void RichTextBox_Loaded(object sender, RoutedEventArgs e)
         {
+            RichTextBox rtb = (RichTextBox)sender;
             Paragraph paragraph = new Paragraph();
             Run run = new Run();
-            run.Text = OpenedFiles[OpenedFiles.Count - 1].Body;
+            run.Text = OpenedFiles[SelectedTabIndex].Body;
 
             paragraph.Margin = new Thickness(0);
             paragraph.FontFamily = new FontFamily("Monaco");
             paragraph.FontSize = 12;
             paragraph.Inlines.Add(run);
             FlowDocument flowDocument = new FlowDocument(paragraph);
-
-            RichTextBox rtb = (RichTextBox)sender;
             rtb.Document = flowDocument;
+
         }
     }
 
