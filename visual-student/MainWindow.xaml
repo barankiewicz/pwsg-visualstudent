@@ -193,7 +193,7 @@
             </Grid>
 
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" ShowsPreview="True"/>
-            <TreeView Grid.Column="2" x:Name="fileTree" ItemsSource="{Binding}" MouseDoubleClick="fileTree_MouseDoubleClick"/>
+            <TreeView Grid.Column="2" x:Name="fileTree" ItemsSource="{Binding}" MouseDoubleClick="fileTree_MouseDoubleClick" SelectedValuePath="Name" SelectedItemChanged="fileTree_SelectedItemChanged"/>
         </Grid>
 
     </Grid>

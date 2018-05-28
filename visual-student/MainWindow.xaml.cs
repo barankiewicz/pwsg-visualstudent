@@ -56,6 +56,8 @@ namespace visual_student
         public ObservableCollection<IPlugin> Plugins { get { return _plugins; } set { _plugins = value; OnPropertyChanged(); } }
         public ObservableCollection<string> PluginNames { get { return _pluginNames; } set { _pluginNames = value; OnPropertyChanged(); } }
         public List<Item> OpenedProjects;
+        public List<RichTextBox> CreatedBoxes;
+
 
         public object ViewModel { get; private set; }
 
@@ -68,6 +70,7 @@ namespace visual_student
             _plugins = new ObservableCollection<IPlugin>();
             _pluginNames = new ObservableCollection<string>();
             OpenedProjects = new List<Item>();
+            CreatedBoxes = new List<RichTextBox>();
 
             errorListBox.ItemsSource = ErrorMessages;
             pluginsMenuItem.ItemsSource = PluginNames;
@@ -100,6 +103,8 @@ namespace visual_student
             {
                 ItemProvider prov = new ItemProvider();
                 List<Item> tmp = prov.GetItems(fbd.SelectedPath, out ProjectPath);
+                if (tmp == null)
+                    return;
                 OpenedProjects.Add(tmp[0]);
                 fileTree.DataContext = OpenedProjects;
                 fileTree.Items.Refresh();
@@ -263,10 +268,10 @@ namespace visual_student
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            foreach(TabItem t in openFiles.Items)
+            foreach(RichTextBox r in CreatedBoxes)
             {
-                RichTextBox rtb = (RichTextBox)t.Content;
-                Plugins[0].Do(rtb);
+                Plugins[0].Do(r);
+                Plugins[1].Do(r);
             }
         }
 
@@ -327,11 +332,22 @@ namespace visual_student
             FlowDocument flowDocument = new FlowDocument(paragraph);
             rtb.Document = flowDocument;
 
+            if (!CreatedBoxes.Contains(rtb))
+                CreatedBoxes.Add(rtb);
+
         }
 
         private void fileTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            MessageBox.Show(fileTree.SelectedValuePath);
+            if(fileTree.SelectedItem is DirectoryItem)
+            {
+                DirectoryItem it = (DirectoryItem)fileTree.SelectedItem;
+                var split = it.Name.Split(':');
+
+                if (split.Length > 1 && split[0] == "Project")
+                    ProjectPath = it.ProjPath;
+            }
+
         }
     }
 
