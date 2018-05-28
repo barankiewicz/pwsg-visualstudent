@@ -69,6 +69,7 @@ namespace visual_student
 
             errorListBox.ItemsSource = ErrorMessages;
             pluginsMenuItem.ItemsSource = PluginNames;
+            openFiles.ItemsSource = OpenedFiles;
             Load_Plugins();
 
             ProjectPath = "";
@@ -126,7 +127,6 @@ namespace visual_student
                 }
                 OpenedFile openedfile = OpenedFile.LoadFromFileStream(file.Path, file.Name);
                 OpenedFiles.Add(openedfile);
-                AddMenuItem(openedfile, OpenedFiles.Count - 1);
                 SelectedTabIndex = OpenedFiles.Count - 1;
             }
         }
@@ -139,7 +139,6 @@ namespace visual_student
             {
                 OpenedFile file = OpenedFile.LoadFromFileStream(opf.FileName, opf.SafeFileName);
                 OpenedFiles.Add(file);
-                AddMenuItem(file, OpenedFiles.Count - 1);
                 SelectedTabIndex = OpenedFiles.Count - 1;
             }
         }
@@ -161,7 +160,6 @@ namespace visual_student
             //New file button
             OpenedFile file = new OpenedFile();
             OpenedFiles.Add(file);
-            AddMenuItem(file, OpenedFiles.Count - 1);
             SelectedTabIndex = OpenedFiles.Count - 1;
         }
         private void ExecuteCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -179,7 +177,13 @@ namespace visual_student
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            openFiles.Items.Remove(((ContentPresenter)((Button)sender).TemplatedParent).TemplatedParent);
+            OpenedFile file = ((sender as Button).DataContext) as OpenedFile;
+            if (file.Modified)
+            {
+                if (MessageBox.Show("This file has been modified. Do you want to save before closing?", "Save file?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    file.Save();
+            }
+            OpenedFiles.Remove(file);
         }
 
         private bool Build_Project()
@@ -304,24 +308,28 @@ namespace visual_student
         {
             RichTextBox richTextBox = (RichTextBox)sender;
             TextRange range = new TextRange(richTextBox.Document.ContentStart, richTextBox.Document.ContentEnd);
+
+            if(range.Text != OpenedFiles[SelectedTabIndex].Body)
+                OpenedFiles[SelectedTabIndex].Modified = true;
+
             OpenedFiles[SelectedTabIndex].Body = range.Text;
+            
         }
 
-        public IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        private void RichTextBox_Loaded(object sender, RoutedEventArgs e)
         {
-            if (depObj != null)
-            {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
-                {
-                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+            Paragraph paragraph = new Paragraph();
+            Run run = new Run();
+            run.Text = OpenedFiles[OpenedFiles.Count - 1].Body;
 
-                    if (child != null && child is T)
-                        yield return (T)child;
+            paragraph.Margin = new Thickness(0);
+            paragraph.FontFamily = new FontFamily("Monaco");
+            paragraph.FontSize = 12;
+            paragraph.Inlines.Add(run);
+            FlowDocument flowDocument = new FlowDocument(paragraph);
 
-                    foreach (T childOfChild in FindVisualChildren<T>(child))
-                        yield return childOfChild;
-                }
-            }
+            RichTextBox rtb = (RichTextBox)sender;
+            rtb.Document = flowDocument;
         }
     }
 
