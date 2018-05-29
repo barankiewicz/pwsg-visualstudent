@@ -36,8 +36,17 @@ namespace SyntaxPluginRed
 
                         TextRange test = new TextRange(end, end.GetPositionAtOffset(1));
 
-                        if (!Char.IsLetterOrDigit(test.Text[0]))
-                            return new TextRange(start, end);
+                        if(word=="for")
+                        {
+                            if(test.Text != "e")
+                                return new TextRange(start, end);
+                        }
+                        else
+                        {
+                            if(test.Text == " " || test.Text == "" || test.Text == "\n" || test.Text == "(")
+                                return new TextRange(start, end);
+                        }
+                                           
                     }
                 }
 

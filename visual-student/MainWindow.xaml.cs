@@ -299,7 +299,9 @@ namespace visual_student
             //foreach (int i in AppliedPlugins)
             //    Plugins[i].Do(richTextBox);
 
-            if (prev.Substring(0, body.Length) != body)
+            string test = prev.TrimEnd(new char[]{ '\n', '\r'});
+            string test2 = body.TrimEnd(new char[] { '\n', '\r' });
+            if (test != test2)
                 OpenedFiles[SelectedTabIndex].Modified = true;
         }
 
