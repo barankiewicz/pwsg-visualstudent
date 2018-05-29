@@ -51,7 +51,7 @@
         </Style>
 
         <DataTemplate x:Key="RichTextBoxTemplate">
-            <RichTextBox VerticalScrollBarVisibility="Auto" TextChanged="Rtb_TextChanged" Loaded="RichTextBox_Loaded"/>
+            <RichTextBox VerticalScrollBarVisibility="Auto" TextChanged="Rtb_TextChanged" Loaded="RichTextBox_Loaded" PreviewKeyDown="RichTextBox_PreviewKeyDown"/>
         </DataTemplate>
 
         <DataTemplate x:Key="errorMessageTemplate">

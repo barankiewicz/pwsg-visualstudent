@@ -112,7 +112,6 @@ namespace visual_student
         {
             //Open project button
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-            fbd.SelectedPath = "X:\\Programming\\C#\\testapp\\testapp";
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 ItemProvider prov = new ItemProvider();
@@ -216,7 +215,7 @@ namespace visual_student
             {
                 {"OutputPath", BuildPath}
             };
-            var pc = new ProjectInstance(ProjectPath, props, "14.0");
+            var pc = new ProjectInstance(ProjectPath, props, "4.0");
 
             StringBuilder sb = new StringBuilder();
             WriteHandler handler = (x) =>
@@ -293,14 +292,19 @@ namespace visual_student
             TextRange range = new TextRange(richTextBox.Document.ContentStart, richTextBox.Document.ContentEnd);
             string prev = range.Text;
             string body = OpenedFiles[SelectedTabIndex].Body;
+            string test = prev.TrimEnd(new char[] { '\n', '\r' });
+            string test2 = body.TrimEnd(new char[] { '\n', '\r' });
+
+            if (test == test2)
+                return;
+
 
             OpenedFiles[SelectedTabIndex].Body = range.Text;
 
             //foreach (int i in AppliedPlugins)
             //    Plugins[i].Do(richTextBox);
 
-            string test = prev.TrimEnd(new char[]{ '\n', '\r'});
-            string test2 = body.TrimEnd(new char[] { '\n', '\r' });
+
             if (test != test2)
                 OpenedFiles[SelectedTabIndex].Modified = true;
         }
@@ -323,6 +327,8 @@ namespace visual_student
         private void RichTextBox_Loaded(object sender, RoutedEventArgs e)
         {
             RichTextBox rtb = (RichTextBox)sender;
+
+            
             Paragraph paragraph = new Paragraph();
             Run run = new Run();
             run.Text = OpenedFiles[SelectedTabIndex].Body;
@@ -340,6 +346,8 @@ namespace visual_student
 
             if (!CreatedBoxes.Contains(rtb))
                 CreatedBoxes.Add(rtb);
+
+            rtb.Focus();
 
         }
 
@@ -400,6 +408,10 @@ namespace visual_student
                 }
                 OpenedFiles.Remove(file);
             }
+        }
+
+        private void RichTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
         }
     }
 
