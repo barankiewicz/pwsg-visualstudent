@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:visual_student"
         xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         mc:Ignorable="d"
-        Title="Visual Student" Height="600" Width="800" MinWidth="500" MinHeight="500" WindowStartupLocation="CenterScreen">
+        Title="Visual Student" Height="600" Width="800" MinWidth="500" MinHeight="500" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
 
     <Window.Resources>
         <CollectionViewSource Source="{Binding Plugins}" x:Key="source"/>

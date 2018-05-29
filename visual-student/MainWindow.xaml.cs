@@ -58,6 +58,7 @@ namespace visual_student
         public List<Item> OpenedProjects;
         public List<RichTextBox> CreatedBoxes;
         public List<int> AppliedPlugins;
+        public List<string> prevTexts;
 
 
         public object ViewModel { get; private set; }
@@ -73,6 +74,7 @@ namespace visual_student
             OpenedProjects = new List<Item>();
             CreatedBoxes = new List<RichTextBox>();
             AppliedPlugins = new List<int>();
+            prevTexts = new List<string>();
 
             errorListBox.ItemsSource = ErrorMessages;
             pluginsMenuItem.ItemsSource = PluginNames;
@@ -93,6 +95,16 @@ namespace visual_student
         private void MenuItem_Click_1(object sender, RoutedEventArgs e)
         {
             //Exit button
+            for(int i = OpenedFiles.Count - 1; i >=0 ; i--)
+            {
+                OpenedFile file = OpenedFiles[i];
+                if (file.Modified)
+                {
+                    if (MessageBox.Show("This file has been modified. Do you want to save before closing?", "Save file " + file.Name + "?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        file.Save();
+                }
+                OpenedFiles.Remove(file);
+            }
             Close();
         }
 
@@ -185,7 +197,7 @@ namespace visual_student
             OpenedFile file = ((sender as Button).DataContext) as OpenedFile;
             if (file.Modified)
             {
-                if (MessageBox.Show("This file has been modified. Do you want to save before closing?", "Save file?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBox.Show("This file has been modified. Do you want to save before closing?", "Save file " + file.Name + "?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                     file.Save();
             }
             OpenedFiles.Remove(file);
@@ -276,10 +288,12 @@ namespace visual_student
 
         private void Rtb_TextChanged(object sender, TextChangedEventArgs e)
         {
+            
             RichTextBox richTextBox = (RichTextBox)sender;
             TextRange range = new TextRange(richTextBox.Document.ContentStart, richTextBox.Document.ContentEnd);
             string prev = range.Text;
             string body = OpenedFiles[SelectedTabIndex].Body;
+
             OpenedFiles[SelectedTabIndex].Body = range.Text;
 
             //foreach (int i in AppliedPlugins)
@@ -310,6 +324,7 @@ namespace visual_student
             Paragraph paragraph = new Paragraph();
             Run run = new Run();
             run.Text = OpenedFiles[SelectedTabIndex].Body;
+            prevTexts.Add(OpenedFiles[SelectedTabIndex].Body);
 
             paragraph.Margin = new Thickness(0);
             paragraph.FontFamily = new FontFamily("Monaco");
@@ -317,9 +332,9 @@ namespace visual_student
             paragraph.Inlines.Add(run);
             FlowDocument flowDocument = new FlowDocument(paragraph);
             rtb.Document = flowDocument;
-
-            //foreach (int i in AppliedPlugins)
-            //    Plugins[i].Do(rtb);
+            
+            foreach (int i in AppliedPlugins)
+                Plugins[i].Do(rtb);
 
             if (!CreatedBoxes.Contains(rtb))
                 CreatedBoxes.Add(rtb);
@@ -368,6 +383,21 @@ namespace visual_student
                 AppliedPlugins.Add(index);
                 menu.IsChecked = true;
             } 
+        }
+
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            for (int i = OpenedFiles.Count - 1; i >= 0; i--)
+            {
+                OpenedFile file = OpenedFiles[i];
+                if (file.Modified)
+                {
+                    if (MessageBox.Show("This file has been modified. Do you want to save before closing?", "Save file " + file.Name + "?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        file.Save();
+                }
+                OpenedFiles.Remove(file);
+            }
         }
     }
 

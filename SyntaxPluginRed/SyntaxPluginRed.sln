@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2018
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyntaxPluginRed", "SyntaxPluginRed\SyntaxPluginRed.csproj", "{779E474F-29BC-4736-A0C0-635D2C0BEE0E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{779E474F-29BC-4736-A0C0-635D2C0BEE0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{779E474F-29BC-4736-A0C0-635D2C0BEE0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{779E474F-29BC-4736-A0C0-635D2C0BEE0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{779E474F-29BC-4736-A0C0-635D2C0BEE0E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {91953487-469D-4B52-BB69-5EDAD87BD07F}
+	EndGlobalSection
+EndGlobal
