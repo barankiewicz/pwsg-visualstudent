@@ -46,7 +46,7 @@ namespace SyntaxPluginRed
                             if(test.Text == " " || test.Text == "" || test.Text == "\n" || test.Text == "(")
                                 return new TextRange(start, end);
                         }
-                                           
+
                     }
                 }
 
