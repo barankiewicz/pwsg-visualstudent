@@ -57,6 +57,7 @@ namespace visual_student
         public ObservableCollection<string> PluginNames { get { return _pluginNames; } set { _pluginNames = value; OnPropertyChanged(); } }
         public List<Item> OpenedProjects;
         public List<RichTextBox> CreatedBoxes;
+        public List<int> AppliedPlugins;
 
 
         public object ViewModel { get; private set; }
@@ -71,6 +72,7 @@ namespace visual_student
             _pluginNames = new ObservableCollection<string>();
             OpenedProjects = new List<Item>();
             CreatedBoxes = new List<RichTextBox>();
+            AppliedPlugins = new List<int>();
 
             errorListBox.ItemsSource = ErrorMessages;
             pluginsMenuItem.ItemsSource = PluginNames;
@@ -266,13 +268,10 @@ namespace visual_student
                 }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void ApplyPlugin(int index)
         {
             foreach(RichTextBox r in CreatedBoxes)
-            {
-                Plugins[0].Do(r);
-                Plugins[1].Do(r);
-            }
+                Plugins[index].Do(r);
         }
 
         private void Rtb_TextChanged(object sender, TextChangedEventArgs e)
@@ -282,6 +281,9 @@ namespace visual_student
             string prev = range.Text;
             string body = OpenedFiles[SelectedTabIndex].Body;
             OpenedFiles[SelectedTabIndex].Body = range.Text;
+
+            //foreach (int i in AppliedPlugins)
+            //    Plugins[i].Do(richTextBox);
 
             if (prev.Substring(0, body.Length) != body)
                 OpenedFiles[SelectedTabIndex].Modified = true;
@@ -316,6 +318,9 @@ namespace visual_student
             FlowDocument flowDocument = new FlowDocument(paragraph);
             rtb.Document = flowDocument;
 
+            //foreach (int i in AppliedPlugins)
+            //    Plugins[i].Do(rtb);
+
             if (!CreatedBoxes.Contains(rtb))
                 CreatedBoxes.Add(rtb);
 
@@ -339,7 +344,6 @@ namespace visual_student
             TextBlock textBlock = (TextBlock)sender;
             ContentPresenter cont = (ContentPresenter)textBlock.TemplatedParent;
             MenuItem menu = (MenuItem)cont.TemplatedParent;
-            MessageBox.Show(textBlock.Text);
 
             int index = 0;
             //Find index
@@ -351,9 +355,19 @@ namespace visual_student
                     break;
                 }
             }
-            
-            menu.IsChecked = true;
-            e.Handled = false;
+
+            ApplyPlugin(index);
+
+            if (menu.IsChecked)
+            {
+                AppliedPlugins.Remove(index);
+                menu.IsChecked = false;
+            }
+            else
+            {
+                AppliedPlugins.Add(index);
+                menu.IsChecked = true;
+            } 
         }
     }
 
